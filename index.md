@@ -110,7 +110,7 @@ Use of AI coding assistants **is permitted**. However, you should explicitly att
 > In our first lecture, we introduce text preprocessing, including tokenization (BPE/WordPiece), and vocab design.
 > 
 > - Thu., 1:30 pm – 4:10 pm, 03/05/2026
-> - **Slides:** <a href="slides/lecture-01-slides/index.md" target="_blank" rel="noopener">Lecture 01 slides</a>
+> - **Slides:** <a href="slides/lecture-01-slides/index.html" target="_blank" rel="noopener">Lecture 01 slides</a>
 > - **Readings:**
 >   - <a href="papers/lecture-01-readings-0-JM_Book_Chapter_2.pdf" target="_blank" rel="noopener">JM Book Chapter 2</a>
 >   - <a href="papers/lecture-01-readings-1-Advances_in_NLP-2015.pdf" target="_blank" rel="noopener">Advances in NLP</a>
@@ -125,14 +125,14 @@ Use of AI coding assistants **is permitted**. However, you should explicitly att
 
 In this lecture, we introduce the concept of MLE, Smoothing, Perplexity, and Language Modeling basics.
 
-- **Slides:**
+- **Slides:** <a href="slides/lecture-02-slides/index.html" target="_blank" rel="noopener">Lecture 02 slides</a>
 - **Readings:**
-  - <a href="lecture-01/readings-0-JM%20Book%20Chapter%202.pdf" target="_blank" rel="noopener">JM Book Chapter 2</a>
-  - <a href="lecture-01/readings-1-Advances%20in%20NLP.pdf" target="_blank" rel="noopener">Advances in NLP</a>
-  - <a href="lecture-01/readings-2-Human%20Language%20Understanding%20and%20Reasoning.pdf" target="_blank" rel="noopener">Human Language Understanding and Reasoning</a>
-  - <a href="lecture-01/readings-3-Scaling%20Laws%20with%20Vocabulary-2407.13623v1.pdf" target="_blank" rel="noopener">Scaling Laws with Vocabulary (2407.13623v1)</a>
-  - <a href="lecture-01/readings-4-Getting%20the%20most%20out%20of%20your%20tokenizer%20for%20pre-training.pdf" target="_blank" rel="noopener">Getting the most out of your tokenizer for pre-training</a>
-- **Excercise:**
+  - <a href="papers/lecture-02-readings-0-JM_Book_Chapter_3.pdf" target="_blank" rel="noopener">JM Book Chapter 3</a>
+  - <a href="papers/lecture-02-readings-1-chen-goodman-99-v2.pdf" target="_blank" rel="noopener">N-gram smoothing</a>
+  - <a href="papers/lecture-02-readings-2-Google-Translate-06.pdf" target="_blank" rel="noopener">First version of Google Translate (2006)</a>
+  - <a href="papers/lecture-02-readings-3-Joshua-Goodman.pdf" target="_blank" rel="noopener">Progress of language modeling (2009)</a>
+  - <a href="papers/lecture-02-readings-4-infinity-gram.pdf" target="_blank" rel="noopener">Application of Infinity-gram model</a>
+- **Excercise: <a href="https://github.com/baojian/llm-26/blob/main/lecture-02-ngram-lm/lecture-02-ngram-lms.ipynb" target="_blank" rel="noopener">lecture-02-ngram-lms.ipynb</a>**
 
 ### Week 3 Word Embeddings
 

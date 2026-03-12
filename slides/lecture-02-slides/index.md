@@ -5,7 +5,7 @@
     <div>Baojian Zhou</div>
     <div>School of Data Science</div>
     <div>Fudan University</div>
-    <div>03/05/2026</div>
+    <div>03/12/2026</div>
   </div>
 </section>
 
@@ -89,7 +89,7 @@
   <div style="font-size: 34px; line-height: 1.25; font-weight: 550; margin-top: 18px;">
     <div class="fragment" data-fragment-index="1">
       Ideal goal (distribution matching) is to make $p_\theta \approx p_{\text{data}}.$ To do this, one principled way is to find a $\theta$ such that the KL divergence is minimized, i.e.,
-      $$\theta^\star=\arg\min_\theta \mathrm{KL}\big(p_{\text{data}} \,\|\, p_\theta\big).$$
+      $$\theta^\star \in \arg\min_\theta \mathrm{KL}\big(p_{\text{data}} \,\|\, p_\theta\big).$$
     </div>
     <div class="fragment" data-fragment-index="3" style="margin-top: 5px;">
       This is equivalent to maximizing expected log-likelihood:
@@ -231,7 +231,7 @@
         line-height: 1.25;
         font-weight: 650;
       ">
-        <span class="text-red">Key success of almost all modern LLMs: Better next-token prediction ⇒ better language modeling.</span><br/>
+        <span class="text-red">Key success of almost all modern LLMs: <br/><br/> Better next-token prediction $\Rightarrow$ <br/> Better language modeling.</span><br/>
       </div>
       <div style="height:20px;"></div>
       <div class="fragment" style="margin-top: 16px;">
@@ -261,40 +261,55 @@
   <div class="ppt-line"></div>
 
   <ul class="bigul">
-    <li>
-      <b>Intuition:</b> instead of using entire history \(w_{1:t-1}\), we can
-      <span class="text-red">approximate</span> probability by using the last few \((N)\) words
-    </li>
-    <li><div style="height:20px;"></div>
-      <b>Unigram model</b> \((N=1)\)
-      <ul class="subul">
-        <li>Approximates \(P(\cdot)\) without history: $\quad P(w_t \mid w_{1:t-1}) \approx q(w_t)$</li>
-        <li> Example: $P(\text{skills}\mid \text{I want to improve my cooking}) \approx P(\text{skills})$ </li>
-      </ul>
-    </li>
-    <li><div style="height:20px;"></div>
-      <b>Bigram model</b> \((N=2)\)
-      <ul class="subul">
-        <li>Approximates \(P(\cdot)\) by only using \(w_{t-1}\): $\quad P(w_t \mid w_{1:t-1}) \approx q(w_i \mid w_{t-1})$</li>
-        <li>Example: $P(\text{skills}\mid \text{I want to improve my cooking}) \approx q(\text{skills}\mid \text{cooking})$</li>
-      </ul>
-    </li>
-    <li><div style="height:20px;"></div>
-      <b>Trigram model</b> \((N=3)\)
-      <ul class="subul">
-        <li>Approximates \(P(w_t\mid w_{1:t-1})\) by only using \(w_{t-2:t-1}\): $\quad P(w_i\mid w_{1:t-1}) \approx q(w_i \mid w_{t-2:t-1})$</li>
-        <li>Example: $P(\text{skills}\mid \text{I want to improve my cooking}) \approx q(\text{skills}\mid \text{my cooking})$</li>
-      </ul>
-    </li>
-  </ul>
+  <li>
+    <b>Intuition:</b> instead of using entire history \(w_{1:t-1}\), we can
+    <span class="text-red">approximate</span> probability by using the last few \((N)\) words
+  </li>
 
-  <div  class="fragment" style="font-size: 34px; line-height: 1.25; font-weight: 550; margin-top: 18px;">
+  <li class="fragment">
+    <b>Unigram model</b> \((N=1)\): Approximates \(P(\cdot)\) without history: $P(w_t \mid w_{1:t-1}) \approx p_\theta(w_t)$
+    <ul class="subul">
+      <li>
+        Example:
+        \[
+        P(\text{skills}\mid \text{I want to improve my cooking}) \approx p_\theta(\text{skills})
+        \]
+      </li>
+    </ul>
+  </li>
+
+  <li class="fragment">
+    <b>Bigram model</b> \((N=2)\): Approximates \(P(\cdot)\) by only using \(w_{t-1}\): $P(w_t \mid w_{1:t-1}) \approx p_\theta(w_t \mid w_{t-1})$
+    <ul class="subul">
+    <li>
+        Example:
+        \[
+        P(\text{skills}\mid \text{I want to improve my cooking}) \approx p_\theta(\text{skills}\mid \text{cooking})
+        \]
+      </li>
+    </ul>
+  </li>
+
+  <li class="fragment">
+    <b>Trigram model</b> \((N=3)\): Approximates \(P(w_t\mid w_{1:t-1})\) by only using \(w_{t-2:t-1}\): $P(w_t\mid w_{1:t-1}) \approx p_\theta(w_t \mid w_{t-2:t-1})$
+    <ul class="subul">
+      <li>
+        Example:
+        \[
+        P(\text{skills}\mid \text{I want to improve my cooking}) \approx p_\theta(\text{skills}\mid \text{my cooking})
+        \]
+      </li>
+    </ul>
+  </li>
+</ul>
+
+  <div  class="fragment" style="font-size: 34px; line-height: 1.25; font-weight: 550; margin-top: 6px;">
     <ul style="font-size: 30px; line-height: 1.25;">
       <li>
         <b>The above approximations use the <b>Markov assumption</b>. In general, for \(N\)-gram</b> \((N\ge 2)\):
       </li>
       \[
-          \text{(N-1)-order Markov:}\qquad P(w_t \mid w_{1:t-1}) \approx q(w_t \mid w_{t-N+1:t-1}).
+          \text{(N-1)-order Markov:}\qquad P(w_t \mid w_{1:t-1}) \approx p_\theta(w_t \mid w_{t-N+1:t-1}).
         \]
     </ul>
   </div>
@@ -318,7 +333,7 @@
           <li>Step 2.2: Build vocabulary $\mathcal{V}$ after tokenization </li>
           </ul>
         </li>
-        <li><b>Step 3</b>: Estimate your paramters $$P(w_t\mid w_{t-N+1:t-1})$$ (<b>Q: How many parameters will we have ?</b>)</li>
+        <li><b>Step 3</b>: Estimate your paramters $$p_\theta(w_t\mid w_{t-N+1:t-1})$$ (<b>Q: How many parameters will we have ?</b>)</li>
         <li><b>Step 4</b>: Test your model by generating sentences or estimating log probabilities (or perplexity) of given sentence in test dataset</li>
       </ul>
     </div>
@@ -331,13 +346,13 @@
         line-height: 1.25;
         font-weight: 650;
         text-align: center;
-      "><span class="text-red">Whiteboard: </span> Estimate bigram $P(w_t|w_{t-1})$
+      "><span class="text-red">Whiteboard: </span> Estimate bigram $p_\theta(w_t|w_{t-1})$
       </div>
       <div style="height:30px;"></div>
       <div class="fragment", style="font-size: 20px;">
       Let $\mathcal{V}=\{v_1,v_2,\ldots,v_{|V|}\}$.
       Define all possible paramters \[
-        \theta_{i,j} = P(w_t=v_i|w_{t-1}=v_j)
+        \theta_{i,j} = p_\theta(w_t=v_i|w_{t-1}=v_j)
         \]
       \[\boldsymbol{\theta}
       = \begin{bmatrix}
@@ -532,7 +547,7 @@
         <div style="margin-top: 10px;">
           For trigram:
           \[
-            q(w_1\mid \text{BOS},\text{BOS})
+            p_\theta(w_1\mid \text{BOS},\text{BOS})
           \]
         </div>
         <div style="margin-top: 6px; opacity: 0.95;">
@@ -564,7 +579,7 @@
             <span class="text-blue">&lt;UNK&gt;</span>
           </li>
           <li class="fragment" style="margin-top: 10px;">
-            <b>How to train</b> \(P(\text{UNK}\mid \cdot)\)?
+            <b>How to train</b> \(p_\theta(\text{UNK}\mid \cdot)\)?
             <ul style="margin-top: 6px; font-size: 26px; line-height: 1.22;">
               <li class="fragment">
                 <b>Prior vocab:</b> convert OOV in training to <span class="text-blue">&lt;UNK&gt;</span>, then count it
@@ -681,7 +696,7 @@
       </div>
       <ul style="font-size: 26px; line-height: 1.25; margin: 0; padding-left: 26px;">
         <li>Does the LM prefer <b>good</b> sentences to <b>bad</b> ones?</li>
-        <li style="margin-top: 8px;">Train on <b>training</b>, evaluate on unseen <b>test</b></li>
+        <li style="margin-top: 8px;">Train on <b>training dataset</b>, evaluate on unseen <b>test</b></li>
         <li style="margin-top: 8px;">Never leak test sentences into training</li>
         <li style="margin-top: 8px;">
           Probability-based metric:<br></br>
@@ -712,7 +727,7 @@
         line-height: 1.25;
         font-weight: 650;
         text-align: center;
-      "><span class="text-red">Whiteboard: </span> Estimate bigram $P(w_t|w_{t-1})$
+      "><span class="text-red">Whiteboard: </span> Propose a reasonable metric
       </div>
     </div>
   </div>
@@ -757,8 +772,8 @@
       ">
         \[
           \mathrm{PPL}(s_{1:m})
-          = P(s_{1:m})^{-1/T}
-          = \exp\!\left(-\frac{1}{T}\log P(s_{1:m})\right)
+          = P_\theta(s_{1:m})^{-1/T}
+          = \exp\!\left(-\frac{1}{T}\log P_\theta(s_{1:m})\right)
         \]
       </div>
       <div style="margin-top: 10px; font-size: 24px; opacity: 0.95;">
@@ -802,7 +817,7 @@
         \]
         </div>
         <ul style="font-size: 26px; line-height: 1.25; margin: 0; padding-left: 26px;">
-         <li style="margin-top: 10px;">If the model is totally random, it needs \(|V|\) guesses on average to get the next word right.</li>
+         <li style="margin-top: 10px;">If the model is totally random, it needs \(|\mathcal{V}|\) guesses on average to get the next word right.</li>
          <li style="margin-top: 10px;">If $|\mathcal{V}|=1$, it surely picks right one. Hence, $\mathrm{PPL}(s_{1:m})=1$</li></div>
       </ul>
 
@@ -854,11 +869,11 @@
         The improvement in perplexity does <b>not</b> guarantee an (extrinsic) improvement in
         downstream tasks like speech recognition or MT.
       </li>
-      <li class="fragment" data-fragment-index="4" style="margin-top: 10px;">
+      <li class="fragment" data-fragment-index="3" style="margin-top: 10px;">
         Because perplexity often correlates with such improvements, it is commonly used as a
         <b>quick check</b> on an algorithm.
       </li>
-      <li class="fragment" data-fragment-index="5" style="margin-top: 10px;">
+      <li class="fragment" data-fragment-index="4" style="margin-top: 10px;">
           <a href="https://arxiv.org/pdf/2005.14165.pdf"
             target="_blank"
             rel="noopener noreferrer"
@@ -866,6 +881,15 @@
             https://arxiv.org/pdf/2005.14165.pdf
           </a>
           <span style="opacity: 0.92;">(See how GPT-3 uses PPL)</span>
+      </li>
+      <li class="fragment" data-fragment-index="6" style="margin-top: 10px;">
+          <a href="https://nlpprogress.com/english/language_modeling.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color:#1f6feb; font-weight:800; text-decoration: underline;">
+            https://nlpprogress.com/english/language_modeling.html
+          </a>
+          <span style="opacity: 0.92;">(See PPL on real datasets)</span>
       </li>
     </ul>
   </div>
@@ -1063,22 +1087,22 @@
 
   <div style="display:flex; gap:28px; align-items:flex-start; margin-top: 14px;">
     <!-- LEFT: bullets -->
-    <div style="flex: 0.95; font-size: 34px; line-height: 1.25; font-weight: 560;">
+    <div style="flex: 1.; font-size: 34px; line-height: 1.25; font-weight: 560;">
       <ul style="margin-top: 0; padding-left: 28px;">
         <li class="fragment" data-fragment-index="1">
           When we have <b>sparse statistics</b>
         </li>
       </ul>
-      <div class="fragment" data-fragment-index="2" style="margin: 18px 0 10px 8px; font-size: 34px; font-weight: 700;">
+      <div class="fragment" data-fragment-index="1" style="margin: 18px 0 10px 8px; font-size: 34px; font-weight: 700;">
         \(q(w \mid \text{denied the})\)
       </div>
       <ul style="margin-top: 10px; padding-left: 28px;">
-        <li class="fragment" data-fragment-index="4" style="margin-top: 10px;">
+        <li class="fragment" data-fragment-index="1" style="margin-top: 10px;">
           <b>Steal probability mass</b> to generalize better
         </li>
-        <li class="fragment" data-fragment-index="6" style="margin-top: 10px;">
+        <li class="fragment" data-fragment-index="2" style="margin-top: 10px;">
           <b>How to steal?</b>
-          <li class="fragment" data-fragment-index="7" style="margin-top: 10px;">
+          <li class="fragment" data-fragment-index="5" style="margin-top: 10px;"> Popular methods: <br>
             Additive smoothing<br>Linear interpolation<br>Backoff smoothing (Katz)<br>KN Smoothing Good-Turing<br>
           </li>
         </li>
@@ -1087,7 +1111,7 @@
     <!-- RIGHT: charts recreated in pure HTML -->
     <div style="flex: 1.05;">
       <!-- TOP: raw sparse counts -->
-      <div class="fragment" data-fragment-index="3" style="
+      <div class="fragment" data-fragment-index="2" style="
         background: rgba(0,0,0,0.04);
         border: 1px solid rgba(0,0,0,0.12);
         border-radius: 14px;
@@ -1161,7 +1185,7 @@
         </div>
       </div>
       <!-- BOTTOM: after smoothing (redistribute mass) -->
-      <div class="fragment" data-fragment-index="5" style="
+      <div class="fragment" data-fragment-index="3" style="
         margin-top: 16px;
         background: rgba(0,0,0,0.04);
         border: 1px solid rgba(0,0,0,0.12);
@@ -1220,11 +1244,11 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Additive smoothing (Laplace / Add-\(\delta\))</div>
+  <div class="ppt-title">Method 1: Additive smoothing (Laplace / Add-\(\delta\))</div>
   <div class="ppt-line"></div>
 
   <!-- Top: two panels side-by-side -->
-  <div style="display:flex; gap:22px; align-items:stretch; margin-top: 10px;">
+  <div class="fragment" data-fragment-index="1" style="display:flex; gap:22px; align-items:stretch; margin-top: 10px;">
     <!-- Left-top: Add-one -->
     <div style="
       flex: 1;
@@ -1250,7 +1274,7 @@
       </div>
     </div>
     <!-- Right-top: Reconstituted counts -->
-    <div style="
+    <div class="fragment" data-fragment-index="2" style="
       flex: 1;
       background: rgba(0,0,0,0.05);
       border: 1px solid rgba(0,0,0,0.12);
@@ -1279,7 +1303,7 @@
   </div>
 
   <!-- Bottom: Add-delta generalization -->
-  <div style="
+  <div class="fragment" data-fragment-index="3" style="
     margin-top: 18px;
     background: rgba(0,0,0,0.06);
     border: 1px solid rgba(0,0,0,0.12);
@@ -1321,7 +1345,7 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Additive smoothing example</div>
+  <div class="ppt-title">Method 1: Additive smoothing example</div>
   <div class="ppt-line"></div>
 
   <!-- IMPORTANT: relative container so the overlay can position inside -->
@@ -1446,7 +1470,7 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Additive smoothing: reconstituted counts</div>
+  <div class="ppt-title">Method 1: Additive smoothing - reconstituted counts</div>
   <div class="ppt-line"></div>
 
   <style>
@@ -1543,11 +1567,11 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Linear interpolation</div>
+  <div class="ppt-title">Method 2: Linear interpolation</div>
   <div class="ppt-line"></div>
 
   <!-- Row 1: bigram interpolation (full width) -->
-  <div style="
+  <div class="fragment" style="
     background: rgba(0,0,0,0.05);
     border: 1px solid rgba(0,0,0,0.12);
     border-radius: 14px;
@@ -1584,7 +1608,7 @@
     </div>
   </div>
   <!-- Row 2: trigram interpolation + how to set lambdas (side-by-side) -->
-  <div style="display:flex; gap:22px; margin-top: 16px; align-items:stretch;">
+  <div class="fragment" style="display:flex; gap:22px; margin-top: 16px; align-items:stretch;">
     <!-- Left: trigram interpolation formula -->
     <div style="
       flex: 1;
@@ -1619,7 +1643,7 @@
       </div>
     </div>
     <!-- Right: held-out tuning -->
-    <div style="
+    <div class="fragment"  style="
       flex: 1;
       background: rgba(0,0,0,0.05);
       border: 1px solid rgba(0,0,0,0.12);
@@ -1674,104 +1698,33 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Language model toolkits and readings</div>
+  <div class="ppt-title">Method 3: Katz backoff</div>
   <div class="ppt-line"></div>
-
-- When we have sparse statistics
-
-<div class="smoothing-row">
-  <div class="smoothing-left">
-    $q(\mathbf{w}\mid \text{denied the})$
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/Katz-backoff.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
   </div>
-
-  <div class="smoothing-right">
-    <!-- Top bar chart -->
-    <svg viewBox="0 0 860 190" width="100%" height="190" role="img" aria-label="Sparse counts">
-      <!-- counts on top -->
-      <text x="118" y="26" font-size="26" font-weight="700">3</text>
-      <text x="228" y="26" font-size="26" font-weight="700">2</text>
-      <text x="338" y="26" font-size="26" font-weight="700">1</text>
-      <text x="448" y="26" font-size="26" font-weight="700">1</text>
-      <text x="558" y="26" font-size="26" font-weight="700">0</text>
-      <text x="668" y="26" font-size="26" font-weight="700">0</text>
-      <text x="778" y="26" font-size="26" font-weight="700">0</text>
-      <text x="828" y="26" font-size="26" font-weight="700">…</text>
-      <!-- bars (baseline y=170) -->
-      <!-- allegations: 3 -->
-      <rect x="90"  y="40" width="70" height="130" fill="var(--bar)" stroke="#111" stroke-width="2"/>
-      <!-- reports: 2 -->
-      <rect x="200" y="80" width="70" height="90"  fill="var(--bar)" stroke="#111" stroke-width="2"/>
-      <!-- claims: 1 -->
-      <rect x="310" y="120" width="70" height="50" fill="var(--bar2)" stroke="#111" stroke-width="2"/>
-      <!-- request: 1 -->
-      <rect x="420" y="120" width="70" height="50" fill="var(--bar2)" stroke="#111" stroke-width="2"/>
-      <!-- rotated labels under bars / tokens -->
-      <g font-size="28" font-weight="650">
-        <text x="120" y="178" transform="rotate(-90 120 178)">allegations</text>
-        <text x="235" y="178" transform="rotate(-90 235 178)">reports</text>
-        <text x="345" y="178" transform="rotate(-90 345 178)">claims</text>
-        <text x="455" y="178" transform="rotate(-90 455 178)">request</text>
-        <text x="565" y="178" transform="rotate(-90 565 178)">attack</text>
-        <text x="675" y="178" transform="rotate(-90 675 178)">man</text>
-        <text x="785" y="178" transform="rotate(-90 785 178)">outcome</text>
-        <text x="895" y="178" transform="rotate(-90 845 178)">…</text>
-      </g>
-    </svg>
-  </div>
-</div>
-
-- Steal probability mass to generalize better
-
-<div class="smoothing-row" style="margin-top:6px;">
-  <div class="smoothing-left prob-block">
-    <div style="font-weight:800; margin-bottom:4px;">$P(\mathbf{w}\mid \text{denied the})$</div>
-    <div>2.5&nbsp;&nbsp;allegations</div>
-    <div>1.5&nbsp;&nbsp;reports</div>
-    <div>0.5&nbsp;&nbsp;claims</div>
-    <div>0.5&nbsp;&nbsp;request</div>
-    <div class="other">2&nbsp;&nbsp;&nbsp;&nbsp;other</div>
-  </div>
-
-  <div class="smoothing-right">
-    <!-- Bottom bar chart (smoothed) -->
-    <svg viewBox="0 0 860 210" width="100%" height="210" role="img" aria-label="Smoothed probabilities">
-      <!-- bars (baseline y=190) -->
-      <rect x="90"  y="55"  width="70" height="135" fill="var(--bar)"  stroke="#111" stroke-width="2"/>
-      <rect x="200" y="85"  width="70" height="105" fill="var(--bar)"  stroke="#111" stroke-width="2"/>
-      <rect x="310" y="135" width="70" height="55"  fill="var(--bar2)" stroke="#111" stroke-width="2"/>
-      <rect x="420" y="135" width="70" height="55"  fill="var(--bar2)" stroke="#111" stroke-width="2"/>
-      <!-- small green mass for "other" spread -->
-      <rect x="530" y="170" width="70" height="20" fill="var(--other)" stroke="#111" stroke-width="2"/>
-      <rect x="640" y="170" width="70" height="20" fill="var(--other)" stroke="#111" stroke-width="2"/>
-      <rect x="750" y="170" width="70" height="20" fill="var(--other)" stroke="#111" stroke-width="2"/>
-      <!-- labels -->
-      <g font-size="28" font-weight="650">
-        <text x="125" y="202" transform="rotate(-90 125 202)">allegations</text>
-        <text x="235" y="202" transform="rotate(-90 235 202)">reports</text>
-        <text x="345" y="202" transform="rotate(-90 345 202)">claims</text>
-        <text x="455" y="202" transform="rotate(-90 455 202)">request</text>
-        <text x="565" y="202" transform="rotate(-90 565 202)">attack</text>
-        <text x="675" y="202" transform="rotate(-90 675 202)">man</text>
-        <text x="785" y="202" transform="rotate(-90 785 202)">outcome</text>
-        <text x="845" y="202" transform="rotate(-90 845 202)">…</text>
-      </g>
-    </svg>
-  </div>
-</div>
-
-- How to steal?
-
 </section>
 
 ---
 
 <section class="ppt">
-  <div class="ppt-title">KN smoothing: from Good–Turing to Kneser–Ney</div>
+  <div class="ppt-title">Method 4: KN smoothing - from Good–Turing to Kneser–Ney</div>
   <div class="ppt-line"></div>
   <!-- Row 1: two panels side-by-side -->
   <div style="display:flex; gap:22px; align-items:stretch; margin-top: 10px;">
     <!-- Left: toy intuition (balls) -->
-    <div style="
+    <div class="fragment"  style="
       flex: 1;
       background: rgba(0,0,0,0.05);
       border: 1px solid rgba(0,0,0,0.12);
@@ -1817,7 +1770,7 @@
       </div>
     </div>
     <!-- Right: frequency-of-frequency + r* -->
-    <div style="
+    <div class="fragment"  style="
       flex: 1;
       background: rgba(0,0,0,0.05);
       border: 1px solid rgba(0,0,0,0.12);
@@ -1873,6 +1826,7 @@
                 & r^{*} =\frac{(r+1)N_{r+1}}{N_r}, \\
                 & P^{*}_{\text{GT}}(w) =\frac{r^{*}}{N}
               \end{align}
+              V={Sam, I, am, do, not, eat, <span class="text-red">Bob, Ben, you</span> }
             </div>
             <div style="margin-top: 8px; color:#1f6feb; font-weight:800;">
               (Show \(P^{*}_{\text{GT}}\) is a distribution!)
@@ -1882,7 +1836,7 @@
       </div>
     </div>
   </div>
-<div style="display:flex; gap:22px; align-items:stretch; margin-top: 10px;">
+<div class="fragment"  style="display:flex; gap:22px; align-items:stretch; margin-top: 10px;">
     <!-- Left: toy intuition (balls) -->
     <div style="
     margin-top: 16px;
@@ -1966,6 +1920,103 @@
 ---
 
 <section class="ppt">
+  <div class="ppt-title">Outline</div>
+  <div class="ppt-line"></div>
+  <ul class="outline-bullets big">
+  <li class="muted">Probabilistic N-gram LMs</li>
+  <li class="muted">Evaluating LMs and Perplexity</li>
+  <li class="muted">Smoothing N-gram LMs</li>
+  <li class="active">Neural Proabablistic LMs</li>
+  </ul>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">Neural Proabablistic LMs (NPLMs)</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/nplm-1.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">Neural Proabablistic LMs (NPLMs)</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/nplm-2.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">Neural Proabablistic LMs (NPLMs)</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/nplm-3.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">Neural Proabablistic LMs (NPLMs)</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/nplm-4.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+<section class="ppt">
   <div class="ppt-title">Language model toolkits and readings</div>
   <div class="ppt-line"></div>
 
@@ -2023,10 +2074,9 @@
       <li style="margin-top: 18px;">
         <b>Reading</b>:
         <span style="color:#1f6feb; font-weight:800;">
-          Chapter 4–5. <i>Naive Bayes and Sentiment Classification</i>. <i>Logistic Regression</i>
+          Chapter 4–5. <i>Naive Bayes and Sentiment Classification</i>. <i>Logistic Regression</i>. <i>Embeddings</i>
         </span>
       </li>
     </ul>
   </div>
 </section>
-
