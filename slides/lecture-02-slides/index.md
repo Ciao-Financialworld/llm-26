@@ -817,7 +817,7 @@
         \]
         </div>
         <ul style="font-size: 26px; line-height: 1.25; margin: 0; padding-left: 26px;">
-         <li style="margin-top: 10px;">If the model is totally random, it needs \(|V|\) guesses on average to get the next word right.</li>
+         <li style="margin-top: 10px;">If the model is totally random, it needs \(|\mathcal{V}|\) guesses on average to get the next word right.</li>
          <li style="margin-top: 10px;">If $|\mathcal{V}|=1$, it surely picks right one. Hence, $\mathrm{PPL}(s_{1:m})=1$</li></div>
       </ul>
 
@@ -1244,7 +1244,7 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Additive smoothing (Laplace / Add-\(\delta\))</div>
+  <div class="ppt-title">Method 1: Additive smoothing (Laplace / Add-\(\delta\))</div>
   <div class="ppt-line"></div>
 
   <!-- Top: two panels side-by-side -->
@@ -1345,7 +1345,7 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Additive smoothing example</div>
+  <div class="ppt-title">Method 1: Additive smoothing example</div>
   <div class="ppt-line"></div>
 
   <!-- IMPORTANT: relative container so the overlay can position inside -->
@@ -1470,7 +1470,7 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Additive smoothing: reconstituted counts</div>
+  <div class="ppt-title">Method 1: Additive smoothing - reconstituted counts</div>
   <div class="ppt-line"></div>
 
   <style>
@@ -1567,11 +1567,11 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Linear interpolation</div>
+  <div class="ppt-title">Method 2: Linear interpolation</div>
   <div class="ppt-line"></div>
 
   <!-- Row 1: bigram interpolation (full width) -->
-  <div style="
+  <div class="fragment" style="
     background: rgba(0,0,0,0.05);
     border: 1px solid rgba(0,0,0,0.12);
     border-radius: 14px;
@@ -1608,7 +1608,7 @@
     </div>
   </div>
   <!-- Row 2: trigram interpolation + how to set lambdas (side-by-side) -->
-  <div style="display:flex; gap:22px; margin-top: 16px; align-items:stretch;">
+  <div class="fragment" style="display:flex; gap:22px; margin-top: 16px; align-items:stretch;">
     <!-- Left: trigram interpolation formula -->
     <div style="
       flex: 1;
@@ -1643,7 +1643,7 @@
       </div>
     </div>
     <!-- Right: held-out tuning -->
-    <div style="
+    <div class="fragment"  style="
       flex: 1;
       background: rgba(0,0,0,0.05);
       border: 1px solid rgba(0,0,0,0.12);
@@ -1698,104 +1698,33 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Language model toolkits and readings</div>
+  <div class="ppt-title">Method 3: Katz backoff</div>
   <div class="ppt-line"></div>
-
-- When we have sparse statistics
-
-<div class="smoothing-row">
-  <div class="smoothing-left">
-    $q(\mathbf{w}\mid \text{denied the})$
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/Katz-backoff.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
   </div>
-
-  <div class="smoothing-right">
-    <!-- Top bar chart -->
-    <svg viewBox="0 0 860 190" width="100%" height="190" role="img" aria-label="Sparse counts">
-      <!-- counts on top -->
-      <text x="118" y="26" font-size="26" font-weight="700">3</text>
-      <text x="228" y="26" font-size="26" font-weight="700">2</text>
-      <text x="338" y="26" font-size="26" font-weight="700">1</text>
-      <text x="448" y="26" font-size="26" font-weight="700">1</text>
-      <text x="558" y="26" font-size="26" font-weight="700">0</text>
-      <text x="668" y="26" font-size="26" font-weight="700">0</text>
-      <text x="778" y="26" font-size="26" font-weight="700">0</text>
-      <text x="828" y="26" font-size="26" font-weight="700">…</text>
-      <!-- bars (baseline y=170) -->
-      <!-- allegations: 3 -->
-      <rect x="90"  y="40" width="70" height="130" fill="var(--bar)" stroke="#111" stroke-width="2"/>
-      <!-- reports: 2 -->
-      <rect x="200" y="80" width="70" height="90"  fill="var(--bar)" stroke="#111" stroke-width="2"/>
-      <!-- claims: 1 -->
-      <rect x="310" y="120" width="70" height="50" fill="var(--bar2)" stroke="#111" stroke-width="2"/>
-      <!-- request: 1 -->
-      <rect x="420" y="120" width="70" height="50" fill="var(--bar2)" stroke="#111" stroke-width="2"/>
-      <!-- rotated labels under bars / tokens -->
-      <g font-size="28" font-weight="650">
-        <text x="120" y="178" transform="rotate(-90 120 178)">allegations</text>
-        <text x="235" y="178" transform="rotate(-90 235 178)">reports</text>
-        <text x="345" y="178" transform="rotate(-90 345 178)">claims</text>
-        <text x="455" y="178" transform="rotate(-90 455 178)">request</text>
-        <text x="565" y="178" transform="rotate(-90 565 178)">attack</text>
-        <text x="675" y="178" transform="rotate(-90 675 178)">man</text>
-        <text x="785" y="178" transform="rotate(-90 785 178)">outcome</text>
-        <text x="895" y="178" transform="rotate(-90 845 178)">…</text>
-      </g>
-    </svg>
-  </div>
-</div>
-
-- Steal probability mass to generalize better
-
-<div class="smoothing-row" style="margin-top:6px;">
-  <div class="smoothing-left prob-block">
-    <div style="font-weight:800; margin-bottom:4px;">$P(\mathbf{w}\mid \text{denied the})$</div>
-    <div>2.5&nbsp;&nbsp;allegations</div>
-    <div>1.5&nbsp;&nbsp;reports</div>
-    <div>0.5&nbsp;&nbsp;claims</div>
-    <div>0.5&nbsp;&nbsp;request</div>
-    <div class="other">2&nbsp;&nbsp;&nbsp;&nbsp;other</div>
-  </div>
-
-  <div class="smoothing-right">
-    <!-- Bottom bar chart (smoothed) -->
-    <svg viewBox="0 0 860 210" width="100%" height="210" role="img" aria-label="Smoothed probabilities">
-      <!-- bars (baseline y=190) -->
-      <rect x="90"  y="55"  width="70" height="135" fill="var(--bar)"  stroke="#111" stroke-width="2"/>
-      <rect x="200" y="85"  width="70" height="105" fill="var(--bar)"  stroke="#111" stroke-width="2"/>
-      <rect x="310" y="135" width="70" height="55"  fill="var(--bar2)" stroke="#111" stroke-width="2"/>
-      <rect x="420" y="135" width="70" height="55"  fill="var(--bar2)" stroke="#111" stroke-width="2"/>
-      <!-- small green mass for "other" spread -->
-      <rect x="530" y="170" width="70" height="20" fill="var(--other)" stroke="#111" stroke-width="2"/>
-      <rect x="640" y="170" width="70" height="20" fill="var(--other)" stroke="#111" stroke-width="2"/>
-      <rect x="750" y="170" width="70" height="20" fill="var(--other)" stroke="#111" stroke-width="2"/>
-      <!-- labels -->
-      <g font-size="28" font-weight="650">
-        <text x="125" y="202" transform="rotate(-90 125 202)">allegations</text>
-        <text x="235" y="202" transform="rotate(-90 235 202)">reports</text>
-        <text x="345" y="202" transform="rotate(-90 345 202)">claims</text>
-        <text x="455" y="202" transform="rotate(-90 455 202)">request</text>
-        <text x="565" y="202" transform="rotate(-90 565 202)">attack</text>
-        <text x="675" y="202" transform="rotate(-90 675 202)">man</text>
-        <text x="785" y="202" transform="rotate(-90 785 202)">outcome</text>
-        <text x="845" y="202" transform="rotate(-90 845 202)">…</text>
-      </g>
-    </svg>
-  </div>
-</div>
-
-- How to steal?
-
 </section>
 
 ---
 
 <section class="ppt">
-  <div class="ppt-title">KN smoothing: from Good–Turing to Kneser–Ney</div>
+  <div class="ppt-title">Method 4: KN smoothing - from Good–Turing to Kneser–Ney</div>
   <div class="ppt-line"></div>
   <!-- Row 1: two panels side-by-side -->
   <div style="display:flex; gap:22px; align-items:stretch; margin-top: 10px;">
     <!-- Left: toy intuition (balls) -->
-    <div style="
+    <div class="fragment"  style="
       flex: 1;
       background: rgba(0,0,0,0.05);
       border: 1px solid rgba(0,0,0,0.12);
@@ -1841,7 +1770,7 @@
       </div>
     </div>
     <!-- Right: frequency-of-frequency + r* -->
-    <div style="
+    <div class="fragment"  style="
       flex: 1;
       background: rgba(0,0,0,0.05);
       border: 1px solid rgba(0,0,0,0.12);
@@ -1897,6 +1826,7 @@
                 & r^{*} =\frac{(r+1)N_{r+1}}{N_r}, \\
                 & P^{*}_{\text{GT}}(w) =\frac{r^{*}}{N}
               \end{align}
+              V={Sam, I, am, do, not, eat, <span class="text-red">Bob, Ben, you</span> }
             </div>
             <div style="margin-top: 8px; color:#1f6feb; font-weight:800;">
               (Show \(P^{*}_{\text{GT}}\) is a distribution!)
@@ -1906,7 +1836,7 @@
       </div>
     </div>
   </div>
-<div style="display:flex; gap:22px; align-items:stretch; margin-top: 10px;">
+<div class="fragment"  style="display:flex; gap:22px; align-items:stretch; margin-top: 10px;">
     <!-- Left: toy intuition (balls) -->
     <div style="
     margin-top: 16px;
@@ -2144,7 +2074,7 @@
       <li style="margin-top: 18px;">
         <b>Reading</b>:
         <span style="color:#1f6feb; font-weight:800;">
-          Chapter 4–5. <i>Naive Bayes and Sentiment Classification</i>. <i>Logistic Regression</i>
+          Chapter 4–5. <i>Naive Bayes and Sentiment Classification</i>. <i>Logistic Regression</i>. <i>Embeddings</i>
         </span>
       </li>
     </ul>
