@@ -136,7 +136,16 @@ In this lecture, we introduce the concept of MLE, Smoothing, Perplexity, and Lan
 
 ### Week 3 Word Embeddings
 
-Word2Vec, Distributional Hypothesis, Intrinsic/Extrinsic eval
+In this lecture, we introduce text classification, Word2Vec, Distributional Hypothesis, and Intrinsic/Extrinsic evaluations.
+
+- **Slides:** <a href="slides/lecture-03-slides/index.html" target="_blank" rel="noopener">Lecture 03 slides</a>
+- **Readings:**
+  - <a href="papers/lecture-03-readings-0-JM_Book_Chapter_4_5.pdf" target="_blank" rel="noopener">JM Book Chapter 4-5</a>
+  - <a href="papers/lecture-03-readings-1-word2vec1.pdf" target="_blank" rel="noopener">Word2vec (2013)</a>
+  - <a href="papers/lecture-03-readings-2-word2vec2.pdf" target="_blank" rel="noopener">CBOW (2013)</a>
+  - <a href="papers/lecture-03-readings-3-qwen-embeddings.pdf" target="_blank" rel="noopener">Qwen Embeddings (2025)</a>
+  - <a href="papers/lecture-03-readings-4-gemini-embeddings.pdf" target="_blank" rel="noopener">Gemini Embeddings (2025)</a>
+- **Excercise: <a href="https://github.com/baojian/llm-26/blob/main/lecture-03-embeddings/lecture-03-embeddings.ipynb" target="_blank" rel="noopener">lecture-03-embeddings.ipynb</a>**
 
 ### Week 4 Neural LMs
 
