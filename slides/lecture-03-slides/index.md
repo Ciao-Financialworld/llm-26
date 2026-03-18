@@ -2067,3 +2067,538 @@
     One-hot input + embedding matrix = lookup the target word vector
   </div>
 </section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Output Layer and Softmax Prediction</div>
+  <div class="ppt-line"></div>
+
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Output embedding matrix
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Let $W_{\text{out}}\in\mathbb{R}^{|V|\times d}.$ Each row \(W_{\text{out}}[c]\) is a vector for a context word \(c\).
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Score each possible context word
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        For each candidate context word \(c\), compute
+        \[
+        s_c = W_{\text{out}}[c]^\top \mathbf{h}.
+        \]
+        Then apply softmax: $P(c\mid w) = \frac{\exp(s_c)} {\sum_{c'\in V}\exp(s_{c'})}.$
+      </div>
+    </div>
+    <div style="flex:1.02;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Running example
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Given target word
+        <span style="color:#1ea7e1; font-weight:700;">quick</span>,
+        the model produces a probability distribution over all 8 vocabulary words:
+        \[
+        P(\text{the}\mid \text{quick}),\;
+        P(\text{brown}\mid \text{quick}),\;
+        P(\text{fox}\mid \text{quick}),\dots
+        \]
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        We want real neighbors such as
+        <b>the</b>, <b>brown</b>, and <b>fox</b>
+        to get high probability.
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <b>Problem:</b> softmax needs scores for
+        <b>every word in the vocabulary</b>.
+        For large vocabularies, this is expensive.
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    Full softmax is conceptually simple, but computationally expensive
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Negative Sampling</div>
+  <div class="ppt-line"></div>
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Positive pair
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Pick one observed context word, for example
+        \[
+        (\text{quick},\text{brown}).
+        \]
+        This is a positive pair because
+        <b>brown</b> appears near <b>quick</b> in the corpus.
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Negative samples
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        Instead of comparing against the whole vocabulary,
+        sample a few noise words, e.g. $\text{dog},\; \text{lazy},\; \text{jumps}.$
+        Then we only distinguish $(\text{quick},\text{brown})$ from
+        \[
+        (\text{quick},\text{dog}),\;
+        (\text{quick},\text{lazy}),\;
+        (\text{quick},\text{jumps}).
+        \]
+      </div>
+    </div>
+    <div style="flex:1.02;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Binary objective
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Score a pair by $s(w,c)=W_{\text{in}}[w]^\top W_{\text{out}}[c].$
+        Turn it into a probability by sigmoid:
+        \[
+        P(D=1\mid w,c)=\sigma(s(w,c)).
+        \]
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        For one positive pair and \(k\) negatives, minimize
+        \[
+        L
+        =
+        -\log \sigma(s(w,c_{pos}))
+        -
+        \sum_{i=1}^{k}\log \sigma(-s(w,c_{neg,i})).
+        \]
+        <div style="margin-top:10px;">
+          This makes
+          <b>(quick, brown)</b> similar,
+          while pushing
+          <b>(quick, dog)</b>, <b>(quick, lazy)</b>, ...
+          apart.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    Negative sampling replaces expensive full softmax by a small binary classification problem
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Quick Summary</div>
+  <div class="ppt-line"></div>
+
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Positive vs. negative pairs
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        Assume the center word is
+        <span style="color:#d62728; font-weight:700;">regression</span>.
+        <div style="margin-top:8px; margin-bottom:6px;">
+          Likely context words:
+          <b>logistic</b>, <b>machine</b>, <b>sigmoid</b>, <b>supervised</b>, <b>neural</b>
+        </div>
+        <div>
+          Unlikely sampled words:
+          <b>zebra</b>, <b>pimples</b>, <b>toothpaste</b>, <b>idiot</b>
+        </div>
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin:12px 0 8px 0;">
+        What the model tries to do
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:6px;">
+          • maximize \(P(D=1\mid w,c_{pos})\) for positive pairs
+        </div>
+        <div>
+          • minimize \(P(D=1\mid w,c_{neg})\) for negative pairs
+        </div>
+      </div>
+    </div>
+    <div style="flex:1.02;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Core intuition
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        If the model can distinguish
+        <b>real target-context pairs</b>
+        from
+        <b>noise pairs</b>,
+        then useful word vectors will be learned.
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        After training:
+        <div style="margin-top:8px;">
+          • words with similar neighborhoods get similar embeddings
+        </div>
+        <div>
+          • semantically related words tend to be close in vector space
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    word2vec learns embeddings by turning context prediction into a binary classification problem.
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Training Objective and SGD</div>
+  <div class="ppt-line"></div>
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Parameters
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        The model parameters are the two embedding matrices: $\theta=(W_{\text{in}}, W_{\text{out}}).$ For one training case, only the current target vector and a few context vectors are involved.
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Local negative-sampling loss
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        For target vector \(\mathbf{w}\), one positive context \(\mathbf{c}_{pos}\),
+        and \(k\) negative contexts \(\mathbf{c}_{neg,1},\dots,\mathbf{c}_{neg,k}\),
+        define
+        \[
+        \ell(\theta)
+        =
+        -\log \sigma(\mathbf{c}_{pos}^{\top}\mathbf{w})
+        -
+        \sum_{i=1}^{k}\log \sigma(-\mathbf{c}_{neg,i}^{\top}\mathbf{w}).
+        \]
+      </div>
+    </div>
+    <div style="flex:1.02;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Corpus-level objective and SGD update
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Over all training positions, minimize the average loss:
+        \[
+        J(\theta)=\frac{1}{T}\sum_{t=1}^{T}\ell_t(\theta).
+        \]
+        Update parameters using one training case at a time:
+        \[
+        \theta^{t+1}
+        =
+        \theta^{t}
+        -
+        \eta_t \nabla \ell_t(\theta^{t}),
+        \]
+        where \(\eta_t\) is the learning rate.
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:6px;">
+          • positive pairs pull embeddings closer
+        </div>
+        <div>
+          • negative pairs push embeddings apart
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    Train by minimizing a local binary-classification loss with SGD
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: One SGD Step for Parameter Updates</div>
+  <div class="ppt-line"></div>
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Gradients
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        Let $s_{pos}=\sigma(\mathbf{c}_{pos}^{\top}\mathbf{w}), s_i=\sigma(\mathbf{c}_{neg,i}^{\top}\mathbf{w}).$
+        Then
+        \[
+        \frac{\partial \ell}{\partial \mathbf{c}_{pos}}=(s_{pos}-1)\mathbf{w},
+        \qquad
+        \frac{\partial \ell}{\partial \mathbf{c}_{neg,i}}=s_i\,\mathbf{w},
+        \]
+        \[
+        \frac{\partial \ell}{\partial \mathbf{w}}
+        =
+        (s_{pos}-1)\mathbf{c}_{pos}
+        +
+        \sum_{i=1}^{k} s_i\,\mathbf{c}_{neg,i}.
+        \]
+      </div>
+    </div>
+    <div style="flex:1.02;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        SGD updates
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        \[
+        \mathbf{c}_{pos}
+        \leftarrow
+        \mathbf{c}_{pos}
+        -
+        \eta_t (s_{pos}-1)\mathbf{w},
+        \]
+        \[
+        \mathbf{c}_{neg,i}
+        \leftarrow
+        \mathbf{c}_{neg,i}
+        -
+        \eta_t s_i\,\mathbf{w},
+        \qquad i=1,\dots,k,
+        \]
+        \[
+        \mathbf{w}
+        \leftarrow
+        \mathbf{w}
+        -
+        \eta_t
+        \left[
+        (s_{pos}-1)\mathbf{c}_{pos}
+        +
+        \sum_{i=1}^{k} s_i\,\mathbf{c}_{neg,i}
+        \right].
+        \]
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:6px;">
+          <b>Effect:</b>
+        </div>
+        <div style="margin-bottom:6px;">
+          • move \(\mathbf{w}\) closer to the positive context vector
+        </div>
+        <div>
+          • move \(\mathbf{w}\) away from the negative context vectors
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    One update step pulls target and true context together, and pushes target away from noise samples
+  </div>
+</section>
+
+---
+
+<!-- .slide: class="ppt" -->
+## Training word2vec <span style="color:#1f77b4; font-size:0.75em;">running example setup</span>
+
+- Example sentence: **Ned Stark is the most honorable man**
+- Target word: <span style="color:#63a33b;"><b>Ned</b></span>
+- Positive context word: <span style="color:#e67e22;"><b>Stark</b></span>
+- Negative samples:
+  <span style="background:#fff3a3; padding:0 0.15em;">pimples</span>,
+  <span style="background:#fff3a3; padding:0 0.15em;">zebra</span>,
+  <span style="background:#fff3a3; padding:0 0.15em;">idiot</span>
+
+- Input embedding matrix: \(W_{\text{in}} \in \mathbb{R}^{|V|\times d}\)
+- Output embedding matrix: \(W_{\text{out}} \in \mathbb{R}^{|V|\times d}\)
+
+<div style="margin-top:0.8em; padding:0.7em 0.9em; border:1px solid #d9deea; border-radius:12px; background:#f7f8fc; font-size:0.9em;">
+For one training case, we only update:
+\[
+\mathbf{w}_{\text{Ned}},\quad
+\mathbf{c}_{\text{Stark}},\quad
+\mathbf{c}_{\text{pimples}},\quad
+\mathbf{c}_{\text{zebra}},\quad
+\mathbf{c}_{\text{idiot}}.
+\]
+</div>
+
+<div style="margin-top:0.9em; text-align:center; font-weight:700; color:#1f4ba5;">
+One positive pair + a few negative pairs
+</div>
+
+---
+
+<!-- .slide: class="ppt" -->
+## Training word2vec <span style="color:#1f77b4; font-size:0.75em;">forward pass</span>
+
+- One-hot input for <span style="color:#63a33b;"><b>Ned</b></span> selects its row from \(W_{\text{in}}\):
+\[
+\mathbf{h} = \mathbf{w}_{\text{Ned}} = [-0.018,\;0.404,\;-0.317]^\top
+\]
+
+- Score each candidate context word by dot product:
+\[
+s_j = \mathbf{c}_j^\top \mathbf{h}
+\]
+
+- Convert score to probability by sigmoid:
+\[
+p_j = \sigma(s_j)
+\]
+
+<div style="margin-top:0.7em; font-size:0.9em;">
+
+| Pair | Score \(s_j\) | Probability \(\sigma(s_j)\) | Label \(t_j\) |
+|---|---:|---:|---:|
+| \((\text{Ned}, \text{Stark})\) | \(0.508\) | \(0.624\) | \(1\) |
+| \((\text{Ned}, \text{pimples})\) | \(0.213\) | \(0.553\) | \(0\) |
+| \((\text{Ned}, \text{zebra})\) | \(0.136\) | \(0.534\) | \(0\) |
+| \((\text{Ned}, \text{idiot})\) | \(-0.132\) | \(0.467\) | \(0\) |
+
+</div>
+
+<div style="margin-top:0.7em; padding:0.7em 0.9em; border:1px solid #eed9b6; border-radius:12px; background:#fff8f0; font-size:0.9em;">
+Loss for this training case:
+\[
+J
+=
+-\log \sigma(\mathbf{c}_{pos}^{\top}\mathbf{h})
+-\sum_{i=1}^{3}\log \sigma(-\mathbf{c}_{neg_i}^{\top}\mathbf{h})
+\]
+</div>
+
+---
+
+<!-- .slide: class="ppt" -->
+## Training word2vec <span style="color:#1f77b4; font-size:0.75em;">backward pass: prediction error and \(\nabla \mathbf{w}_{in}\)</span>
+
+- Prediction error for each selected output row:
+\[
+\delta_j = \sigma(\mathbf{c}_j^\top \mathbf{h}) - t_j
+\]
+
+<div style="margin-top:0.6em; font-size:0.92em;">
+
+| Word \(j\) | \(\sigma(\mathbf{c}_j^\top \mathbf{h})\) | \(t_j\) | \(\delta_j\) |
+|---|---:|---:|---:|
+| Stark | \(0.624\) | \(1\) | \(-0.376\) |
+| pimples | \(0.553\) | \(0\) | \(0.553\) |
+| zebra | \(0.534\) | \(0\) | \(0.534\) |
+| idiot | \(0.467\) | \(0\) | \(0.467\) |
+
+</div>
+
+- Gradient w.r.t. the target embedding:
+\[
+\frac{\partial J}{\partial \mathbf{w}}
+=
+(\sigma(\mathbf{c}_{pos}^\top \mathbf{w})-1)\mathbf{c}_{pos}
++
+\sum_{i=1}^{3}\sigma(\mathbf{c}_{neg_i}^\top \mathbf{w})\mathbf{c}_{neg_i}
+\]
+
+- For this example:
+\[
+\nabla \mathbf{w}_{in}
+=
+[-0.932,\;0.319,\;0.655]^\top
+\]
+
+<div style="margin-top:0.8em; padding:0.7em 0.9em; border:1px solid #d9deea; border-radius:12px; background:#f7f8fc; font-size:0.9em;">
+Interpretation: the target vector <b>Ned</b> is pushed
+toward <b>Stark</b> and away from the negative samples.
+</div>
+
+---
+
+<!-- .slide: class="ppt" -->
+## Training word2vec <span style="color:#1f77b4; font-size:0.75em;">backward pass: \(\nabla \mathbf{w}_{out}\)</span>
+
+- Positive context gradient:
+\[
+\frac{\partial J}{\partial \mathbf{c}_{pos}}
+=
+(\sigma(\mathbf{c}_{pos}^\top \mathbf{w})-1)\mathbf{w}
+\]
+
+- Negative context gradients:
+\[
+\frac{\partial J}{\partial \mathbf{c}_{neg_i}}
+=
+\sigma(\mathbf{c}_{neg_i}^\top \mathbf{w})\mathbf{w}
+\]
+
+<div style="margin-top:0.7em; font-size:0.9em;">
+
+| Updated row in \(W_{out}\) | Gradient |
+|---|---|
+| \(\nabla \mathbf{c}_{\text{Stark}}\) | \([\,0.007,\;-0.152,\;0.119\,]\) |
+| \(\nabla \mathbf{c}_{\text{pimples}}\) | \([\, -0.010,\;0.223,\;-0.175\,]\) |
+| \(\nabla \mathbf{c}_{\text{zebra}}\) | \([\, -0.010,\;0.216,\;-0.169\,]\) |
+| \(\nabla \mathbf{c}_{\text{idiot}}\) | \([\, -0.008,\;0.189,\;-0.148\,]\) |
+
+</div>
+
+<div style="margin-top:0.8em; padding:0.7em 0.9em; border:1px solid #eed9b6; border-radius:12px; background:#fff8f0; font-size:0.9em;">
+Only a <b>few rows</b> of \(W_{out}\) are touched in one SGD step:
+one positive context row and a few sampled negative rows.
+</div>
+
+---
+
+<!-- .slide: class="ppt" -->
+## Training word2vec <span style="color:#1f77b4; font-size:0.75em;">SGD parameter update</span>
+
+- With learning rate \(\eta = 0.05\), update by
+\[
+\theta \leftarrow \theta - \eta \nabla_\theta J
+\]
+
+### Update target row in \(W_{in}\)
+
+\[
+\mathbf{w}_{\text{Ned}}^{old}
+=
+[-0.018,\;0.404,\;-0.317]
+\]
+
+\[
+\mathbf{w}_{\text{Ned}}^{new}
+=
+\mathbf{w}_{\text{Ned}}^{old}
+-
+0.05 \cdot [-0.932,\;0.319,\;0.655]
+=
+[0.029,\;0.388,\;-0.350]
+\]
+
+### Update selected rows in \(W_{out}\)
+
+\[
+\mathbf{c}_{\text{Stark}}^{new}
+=
+[0.116,\;0.731,\;-0.695]
+\]
+
+\[
+\mathbf{c}_{\text{pimples}}^{new}
+=
+[-0.940,\;0.590,\;0.155]
+\]
+
+\[
+\mathbf{c}_{\text{zebra}}^{new}
+=
+[-0.622,\;0.800,\;0.648]
+\]
+
+\[
+\mathbf{c}_{\text{idiot}}^{new}
+=
+[-0.077,\;-0.384,\;-0.049]
+\]
+
+<div style="margin-top:0.8em; padding:0.7em 0.9em; border:1px solid #d9deea; border-radius:12px; background:#f7f8fc; font-size:0.9em;">
+<b>Takeaway:</b> one SGD step
+pulls <b>Ned</b> closer to <b>Stark</b>,
+and pushes it away from the sampled negative words.
+</div>
