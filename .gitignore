@@ -214,3 +214,6 @@ gpt-2
 **/.DS_Store
 .idea
 **/kenlm
+**/.datasets
+datasets.zip
+**/datasets.zip
