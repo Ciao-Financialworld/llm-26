@@ -1538,3 +1538,89 @@
   </ul>
 </section>
 
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Background and Core Idea</div>
+  <div class="ppt-line"></div>
+
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <!-- Left column -->
+    <div style="flex:0.95;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Background
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:8px;">
+          <b>word2vec</b> was introduced by Tomas Mikolov and collaborators in
+          <b>2013</b> and quickly became one of the most influential methods
+          for learning word embeddings.
+        </div>
+        <div style="margin-bottom:8px;">
+          It marked a shift from <b>counting-based</b> representations
+          to <b>prediction-based</b> representations.
+        </div>
+        <div>
+          Instead of building a word vector directly from raw co-occurrence counts,
+          word2vec <b>learns</b> vectors by solving an auxiliary prediction task.
+        </div>
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin:12px 0 8px 0;">
+        Two famous 2013 papers
+      </div>
+      <div style="font-size:0.6em; line-height:1.38; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:6px;">
+          • <i>Efficient Estimation of Word Representations in Vector Space</i>
+        </div>
+        <div>
+          • <i>Distributed Representations of Words and Phrases and their Compositionality</i>
+        </div>
+      </div>
+    </div>
+    <!-- Right column -->
+    <div style="flex:1.05;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Core idea
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Learn an embedding matrix
+        \[
+        E \in \mathbb{R}^{|V|\times d}
+        \]
+        by training a simple model to predict nearby words.
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        <div style="margin-bottom:8px;">
+          Given a target word \(w_t\), predict a context word \(w_{t+j}\)
+          within a small window.
+        </div>
+        <div style="text-align:center; margin:8px 0;">
+          \[
+          \text{target word} \;\longrightarrow\; \text{predict nearby words}
+          \]
+        </div>
+        <div>
+          Words that appear in similar contexts are pushed to have similar vectors.
+        </div>
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Why it matters
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:6px;">
+          • <b>predict rather than count</b>
+        </div>
+        <div style="margin-bottom:6px;">
+          • learn <b>dense, low-dimensional</b> word vectors
+        </div>
+        <div>
+          • provides a simple and efficient framework for modern embedding learning
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    word2vec learns word meaning by predicting context, not by directly counting context
+  </div>
+</section>
+
