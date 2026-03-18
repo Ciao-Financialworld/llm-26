@@ -123,29 +123,28 @@ Use of AI coding assistants **is permitted**. However, you should explicitly att
 
 ### Week 2 N-Gram Language Models
 
-In this lecture, we introduce the concept of MLE, Smoothing, Perplexity, and Language Modeling basics.
+> In this lecture, we introduce the concept of MLE, Smoothing, Perplexity, and Language Modeling basics.
 
-- **Slides:** <a href="slides/lecture-02-slides/index.html" target="_blank" rel="noopener">Lecture 02 slides</a>
-- **Readings:**
-  - <a href="papers/lecture-02-readings-0-JM_Book_Chapter_3.pdf" target="_blank" rel="noopener">JM Book Chapter 3</a>
-  - <a href="papers/lecture-02-readings-1-chen-goodman-99-v2.pdf" target="_blank" rel="noopener">N-gram smoothing</a>
-  - <a href="papers/lecture-02-readings-2-Google-Translate-06.pdf" target="_blank" rel="noopener">First version of Google Translate (2006)</a>
-  - <a href="papers/lecture-02-readings-3-Joshua-Goodman.pdf" target="_blank" rel="noopener">Progress of language modeling (2009)</a>
-  - <a href="papers/lecture-02-readings-4-infinity-gram.pdf" target="_blank" rel="noopener">Application of Infinity-gram model</a>
-- **Excercise: <a href="https://github.com/baojian/llm-26/blob/main/lecture-02-ngram-lm/lecture-02-ngram-lms.ipynb" target="_blank" rel="noopener">lecture-02-ngram-lms.ipynb</a>**
+> - **Slides:** <a href="slides/lecture-02-slides/index.html" target="_blank" rel="noopener">Lecture 02 slides</a>
+> - **Readings:**
+>   - <a href="papers/lecture-02-readings-0-JM_Book_Chapter_3.pdf" target="_blank" rel="noopener">JM Book Chapter 3</a>
+>   - <a href="papers/lecture-02-readings-1-chen-goodman-99-v2.pdf" target="_blank" rel="noopener">N-gram smoothing</a>
+>   - <a href="papers/lecture-02-readings-2-Google-Translate-06.pdf" target="_blank" rel="noopener">First version of Google Translate (2006)</a>
+>   - <a href="papers/lecture-02-readings-3-Joshua-Goodman.pdf" target="_blank" rel="noopener">Progress of language modeling (2009)</a>
+>   - <a href="papers/lecture-02-readings-4-infinity-gram.pdf" target="_blank" rel="noopener">Application of Infinity-gram model</a>
+> - **Excercise: <a href="https://github.com/baojian/llm-26/blob/main/lecture-02-ngram-lm/lecture-02-ngram-lms.ipynb" target="_blank" rel="noopener">lecture-02-ngram-lms.ipynb</a>**
 
 ### Week 3 Word Embeddings
 
-In this lecture, we introduce text classification, Word2Vec, Distributional Hypothesis, and Intrinsic/Extrinsic evaluations.
-
-- **Slides:** <a href="slides/lecture-03-slides/index.html" target="_blank" rel="noopener">Lecture 03 slides</a>
-- **Readings:**
-  - <a href="papers/lecture-03-readings-0-JM_Book_Chapter_4_5.pdf" target="_blank" rel="noopener">JM Book Chapter 4-5</a>
-  - <a href="papers/lecture-03-readings-1-word2vec1.pdf" target="_blank" rel="noopener">Word2vec (2013)</a>
-  - <a href="papers/lecture-03-readings-2-word2vec2.pdf" target="_blank" rel="noopener">CBOW (2013)</a>
-  - <a href="papers/lecture-03-readings-3-qwen-embeddings.pdf" target="_blank" rel="noopener">Qwen Embeddings (2025)</a>
-  - <a href="papers/lecture-03-readings-4-gemini-embeddings.pdf" target="_blank" rel="noopener">Gemini Embeddings (2025)</a>
-- **Excercise: <a href="https://github.com/baojian/llm-26/blob/main/lecture-03-embeddings/lecture-03-embeddings.ipynb" target="_blank" rel="noopener">lecture-03-embeddings.ipynb</a>**
+> In this lecture, we introduce text classification, Word2Vec, Distributional Hypothesis, and Intrinsic/Extrinsic evaluations.
+> - **Slides:** <a href="slides/lecture-03-slides/index.html" target="_blank" rel="noopener">Lecture 03 slides</a>
+> - **Readings:**
+>   - <a href="papers/lecture-03-readings-0-JM_Book_Chapter_4_5.pdf" target="_blank" rel="noopener">JM Book Chapter 4-5</a>
+>   - <a href="papers/lecture-03-readings-1-word2vec1.pdf" target="_blank" rel="noopener">Word2vec (2013)</a>
+>   - <a href="papers/lecture-03-readings-2-word2vec2.pdf" target="_blank" rel="noopener">CBOW (2013)</a>
+>   - <a href="papers/lecture-03-readings-3-qwen-embeddings.pdf" target="_blank" rel="noopener">Qwen Embeddings (2025)</a>
+>   - <a href="papers/lecture-03-readings-4-gemini-embeddings.pdf" target="_blank" rel="noopener">Gemini Embeddings (2025)</a>
+> - **Excercise: <a href="https://github.com/baojian/llm-26/blob/main/lecture-03-embeddings/lecture-03-embeddings.ipynb" target="_blank" rel="noopener">lecture-03-embeddings.ipynb</a>**
 
 ### Week 4 Neural LMs
 
