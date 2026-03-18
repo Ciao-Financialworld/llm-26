@@ -1570,11 +1570,11 @@
       </div>
       <div style="font-size:0.6em; line-height:1.38; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
         <div style="margin-bottom:6px;">
-          • <i>Efficient Estimation of Word Representations in Vector Space</i>
-        </div>
-        <div>
-          • <i>Distributed Representations of Words and Phrases and their Compositionality</i>
-        </div>
+  • <a href="https://baojian.github.io/llm-26/papers/lecture-03-readings-1-word2vec1.pdf" target="_blank"><i>Efficient Estimation of Word Representations ...</i></a>
+</div>
+<div>
+  • <a href="https://baojian.github.io/llm-26/papers/lecture-03-readings-2-word2vec2.pdf" target="_blank"><i>Distributed Representations of Words and Phrases ...</i></a>
+</div>
       </div>
     </div>
     <!-- Right column -->
@@ -1583,17 +1583,9 @@
         Core idea
       </div>
       <div style="font-size:0.6em; line-height:1.42; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
-        Learn an embedding matrix
-        \[
-        E \in \mathbb{R}^{|V|\times d}
-        \]
-        by training a simple model to predict nearby words.
-      </div>
-      <div style="font-size:0.6em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
-        <div style="margin-bottom:8px;">
-          Given a target word \(w_t\), predict a context word \(w_{t+j}\)
+        Learn an embedding matrix $E \in \mathbb{R}^{|V|\times d}$ by training a simple model to predict nearby words.
+        Given a target word \(w_t\), predict a context word \(w_{t+j}\)
           within a small window.
-        </div>
         <div style="text-align:center; margin:8px 0;">
           \[
           \text{target word} \;\longrightarrow\; \text{predict nearby words}
@@ -1624,3 +1616,454 @@
   </div>
 </section>
 
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Intuition</div>
+  <div class="ppt-line"></div>
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <!-- Left column -->
+    <div style="flex:1.0;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        From counting to prediction
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:8px;">
+          Consider a running sentence:
+        </div>
+        <div style="text-align:center; font-size:1.05em; margin:10px 0 12px 0;">
+          The <span style="color:#5a9f3d;">quick brown</span>
+          <span style="color:#d62728; font-weight:700;">fox</span>
+          <span style="color:#5a9f3d;">jumps over</span>
+          the lazy dog
+        </div>
+        <div>
+          Instead of counting how often each word appears near
+          <span style="color:#d62728; font-weight:700;">fox</span>,
+          word2vec trains a small model to <b>predict nearby words</b>.
+        </div>
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin:12px 0 8px 0;">
+        Self-supervision
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        No human labels are needed.  
+        If a word \(c\) occurs near the target word \(w\), then \((w,c)\) is automatically a useful training signal.
+      </div>
+    </div>
+    <!-- Right column -->
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Core idea
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        <div style="margin-bottom:8px;">
+          <b>Target word</b> \(\rightarrow\) <b>predict context words</b>
+        </div>
+        <div style="text-align:center; margin:8px 0;">
+          \[
+          w_t \;\longrightarrow\; w_{t+j}, \qquad j \in \{-m,\dots,-1,1,\dots,m\}
+          \]
+        </div>
+        <div>
+          Words that occur in similar contexts will end up with similar vectors.
+        </div>
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        What do we keep after training?
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        We are not mainly interested in the prediction accuracy itself.  
+        We keep the learned parameters as the <b>word embeddings</b>.
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    word2vec learns word vectors by solving a self-supervised prediction task
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Constructing Training Pairs</div>
+  <div class="ppt-line"></div>
+
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <!-- Left column -->
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Positive pairs
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:8px;">
+          Let the target word be
+          <span style="color:#d62728; font-weight:700;">fox</span>
+          with window size \(m=2\):
+        </div>
+        <div style="text-align:center; font-size:1.02em; margin:10px 0 12px 0;">
+          The
+          <span style="color:#12a150;">quick brown</span>
+          <span style="color:#d62728; font-weight:700;">fox</span>
+          <span style="color:#12a150;">jumps over</span>
+          the lazy dog
+        </div>
+        <div style="margin-bottom:8px;">
+          Then the observed context words are:
+          \[
+          \{\text{quick},\text{brown},\text{jumps},\text{over}\}.
+          \]
+        </div>
+        <div>
+          So we create positive training pairs:
+          \[
+          (\text{fox},\text{quick}),\;
+          (\text{fox},\text{brown}),\;
+          (\text{fox},\text{jumps}),\;
+          (\text{fox},\text{over}).
+          \]
+        </div>
+      </div>
+    </div>
+    <!-- Right column -->
+    <div style="flex:1.02;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Negative pairs
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        In addition to observed neighbors, word2vec samples
+        <b>noise words</b> that did not occur in the context window, e.g.
+        \[
+        \text{aardvark},\; \text{seven},\; \text{forever},\; \text{dear}.
+        \]
+        This gives negative pairs such as
+        \[
+        (\text{fox},\text{aardvark}),\;
+        (\text{fox},\text{seven}),\;
+        (\text{fox},\text{forever}).
+        \]
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Training view
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        it turns the corpus into a binary classification:
+        <div style="text-align:center; margin-top:8px;">
+          \[
+          (w,c)\;\longmapsto\;
+          \begin{cases}
+          1, & \text{if } c \text{ is a real neighbor of } w \\
+          0, & \text{if } c \text{ is a sampled noise word}
+          \end{cases}
+          \]
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    Observed neighbors give positive pairs; sampled noise words give negative pairs
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Negative Sampling Objective</div>
+  <div class="ppt-line"></div>
+
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <!-- Left column -->
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Scoring a word-context pair
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:8px;">
+          Let \(\mathbf{u}_w\) be the embedding of target word \(w\),
+          and \(\mathbf{v}_c\) be the embedding of context word \(c\). Score the pair by the dot product: $s(w,c)=\mathbf{u}_w^\top \mathbf{v}_c.$
+        </div>
+        <div>
+          Convert it to a probability by sigmoid:
+          \[
+          P(D=1\mid w,c)=\sigma(\mathbf{u}_w^\top \mathbf{v}_c),
+          \]
+          where \(D=1\) means “\(c\) is a true context word of \(w\)”.
+        </div>
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin:12px 0 8px 0;">
+        Negative pair probability
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        \[
+        P(D=0\mid w,c)=1-\sigma(\mathbf{u}_w^\top \mathbf{v}_c)
+        =\sigma(-\mathbf{u}_w^\top \mathbf{v}_c).
+        \]
+      </div>
+    </div>
+    <!-- Right column -->
+    <div style="flex:1.02;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Loss for one positive pair
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Suppose \(c_{pos}\) is a real context word and
+        \(c_{neg,1},\dots,c_{neg,k}\) are \(k\) sampled noise words.
+      </div>
+      <div style="font-size:0.6em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        The negative-sampling loss is
+        \[
+        L(w,c_{pos},c_{neg,1:k})
+        =
+        -\log \sigma(\mathbf{u}_w^\top \mathbf{v}_{c_{pos}})
+        -
+        \sum_{i=1}^{k}
+        \log \sigma(-\mathbf{u}_w^\top \mathbf{v}_{c_{neg,i}}).
+        \]
+        <div style="margin-top:10px;">
+          This objective:
+          <div style="margin-top:6px;">
+            • makes \(w\) similar to true context words  
+          </div>
+          <div>
+            • makes \(w\) dissimilar to sampled noise words
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    Maximize similarity to true neighbors, minimize similarity to noise samples
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Model Parameters</div>
+  <div class="ppt-line"></div>
+
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <!-- Left column -->
+    <div style="flex:0.82;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        What parameters are learned?
+      </div>
+      <div style="font-size:0.6em; line-height:1.44; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        word2vec learns two parameter matrices:
+        \[
+        \theta = (W,\;C)
+        \]
+        where $W \in \mathbb{R}^{|V_w|\times d}, \qquad C \in \mathbb{R}^{|V_c|\times d}.$
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Interpretation
+      </div>
+      <div style="font-size:0.6em; line-height:1.44; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:6px;">
+          • \(W\): <b>target-word</b> embedding matrix
+        </div>
+        <div style="margin-bottom:6px;">
+          • \(C\): <b>context-word</b> embedding matrix
+        </div>
+        <div>
+          • \(|V_w|\)</b>: target-word vocabulary size &nbsp;&nbsp;
+        </div>
+        <div>
+          • \(|V_c|\)</b>: context-word vocabulary size
+        </div>
+        <div>
+          • \(d\)</b>: embedding dimension &nbsp;&nbsp;
+        </div>
+        <div>
+          • \(k\)</b>: number of negative samples
+        </div>
+      </div>
+    </div>
+    <!-- Right column -->
+    <div style="flex:1.18;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Matrix view
+      </div>
+      <div style="display:flex; gap:14px; font-size:0.5em; line-height:1.3;">
+        <div style="flex:1; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:10px 12px;">
+          <div style="text-align:center; font-weight:800; color:#1f4ba5; margin-bottom:6px;">
+            \(W\): target words
+          </div>
+          <table style="width:100%; border-collapse:collapse; text-align:center; font-size:0.95em;">
+            <tr style="background:#11b25c; color:white;">
+              <th style="padding:4px;">the</th><th>2</th><th>0.5</th><th>\(\cdots\)</th><th>4</th>
+            </tr>
+            <tr style="background:#1ea7e1; color:white;">
+              <th style="padding:4px;">quick</th><td>0.1</td><td>0.2</td><td></td><td>0.7</td>
+            </tr>
+            <tr style="background:#4d79c7; color:white;">
+              <th style="padding:4px;">brown</th><td>0.3</td><td>-2</td><td></td><td>0.2</td>
+            </tr>
+            <tr style="background:#f2b500; color:black;">
+              <th style="padding:4px;">fox</th><td>-2</td><td>0.2</td><td></td><td>0.8</td>
+            </tr>
+            <tr><th style="padding:6px;">\(\vdots\)</th><td>\(\vdots\)</td><td>\(\vdots\)</td><td></td><td>\(\vdots\)</td></tr>
+            <tr style="background:#69a8df; color:white;">
+              <th style="padding:4px;">lazy</th><td>1</td><td>0.7</td><td></td><td>3</td>
+            </tr>
+            <tr style="background:#7dbb42; color:white;">
+              <th style="padding:4px;">dog</th><td>3</td><td>5</td><td></td><td>0.2</td>
+            </tr>
+          </table>
+        </div>
+        <div style="flex:1; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:10px 12px;">
+          <div style="text-align:center; font-weight:800; color:#1f4ba5; margin-bottom:6px;">
+            \(C\): context words
+          </div>
+          <table style="width:100%; border-collapse:collapse; text-align:center; font-size:0.95em;">
+            <tr style="background:#11b25c; color:white;">
+              <th style="padding:4px;">the</th><th>1.5</th><th>0.2</th><th>\(\cdots\)</th><th>3</th>
+            </tr>
+            <tr style="background:#1ea7e1; color:white;">
+              <th style="padding:4px;">quick</th><td>0.9</td><td>0.3</td><td></td><td>0.7</td>
+            </tr>
+            <tr style="background:#4d79c7; color:white;">
+              <th style="padding:4px;">brown</th><td>-2</td><td>1</td><td></td><td>0.7</td>
+            </tr>
+            <tr style="background:#f2b500; color:black;">
+              <th style="padding:4px;">fox</th><td>3</td><td>0.4</td><td></td><td>0.9</td>
+            </tr>
+            <tr><th style="padding:6px;">\(\vdots\)</th><td>\(\vdots\)</td><td>\(\vdots\)</td><td></td><td>\(\vdots\)</td></tr>
+            <tr style="background:#69a8df; color:white;">
+              <th style="padding:4px;">lazy</th><td>3</td><td>0.6</td><td></td><td>2.5</td>
+            </tr>
+            <tr style="background:#7dbb42; color:white;">
+              <th style="padding:4px;">dog</th><td>7</td><td>2</td><td></td><td>0.1</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div style="margin-top:12px; font-size:0.6em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
+        In neural-network notation, these are often written as
+        \[
+        W = W_{\text{in}}, \qquad C = W_{\text{out}}.
+        \]
+        After training, we usually keep \(W\), or average \(W\) and \(C\), as the final word embeddings.
+      </div>
+    </div>
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: Running Example Setup</div>
+  <div class="ppt-line"></div>
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.98;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Training corpus
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Consider the sentence
+        <div style="text-align:center; font-size:1.05em; margin:10px 0 4px 0;">
+          the quick brown fox jumps over the lazy dog
+        </div>
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Model settings
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <div style="margin-bottom:6px;">
+          • window size \(m=2\)
+        </div>
+        <div style="margin-bottom:6px;">
+          • embedding dimension \(d=3\)
+        </div>
+        <div style="margin-bottom:6px;">
+          • vocabulary
+          \[
+          V=\{\text{the, quick, brown, fox, jumps, over, lazy, dog}\}
+          \]
+        </div>
+        <div>
+          • vocabulary size \(|V|=8\)
+        </div>
+      </div>
+    </div>
+    <div style="flex:1.02;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        One training position
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        Take
+        <span style="color:#1ea7e1; font-weight:700;">quick</span>
+        as the target word:
+        <div style="text-align:center; font-size:1.0em; margin:10px 0;">
+          the
+          <span style="color:#1ea7e1; font-weight:700;">quick</span>
+          brown fox jumps over the lazy dog
+        </div>
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        With window size \(m=2\), the observed context words are
+        \[
+        \{\text{the},\text{brown},\text{fox}\}.
+        \]
+        So the positive pairs are
+        \[
+        (\text{quick},\text{the}),\;
+        (\text{quick},\text{brown}),\;
+        (\text{quick},\text{fox}).
+        \]
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    word2vec turns the corpus into many target-context training pairs
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">word2vec: From One-Hot Input to Hidden Vector</div>
+  <div class="ppt-line"></div>
+
+  <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.95;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Input representation
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        The target word
+        <span style="color:#1ea7e1; font-weight:700;">quick</span>
+        is represented by a one-hot vector $\mathbf{x}\in\mathbb{R}^{|V|}.$ If the vocabulary order is
+        \[
+        (\text{the, quick, brown, fox, jumps, over, lazy, dog}),
+        \]
+        then $\mathbf{x}_{\text{quick}}= [0,1,0,0,0,0,0,0]^\top.$
+      </div>
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Input embedding matrix
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        Let $W_{\text{in}}\in\mathbb{R}^{|V|\times d}.$ Each row of \(W_{\text{in}}\) is the embedding of one target word.
+      </div>
+    </div>
+    <div style="flex:1.05;">
+      <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Projection = embedding lookup
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+        The hidden vector is $\mathbf{h}=W_{\text{in}}^\top \mathbf{x}.$ Since \(\mathbf{x}\) is one-hot, this simply selects the row for
+        <span style="color:#1ea7e1; font-weight:700;">quick</span>.
+      </div>
+      <div style="font-size:0.7em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        Example: $W_{\text{in}}[\text{quick}] = [0.1,\;0.2,\;0.7].$ Therefore $\mathbf{h}=[0.1,\;0.2,\;0.7]^\top.$
+      </div>
+      <div style="margin-top:12px; font-size:0.7em; line-height:1.42; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        So the “hidden layer” in skip-gram is not complicated:
+        it is just the embedding vector of the target word.
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    One-hot input + embedding matrix = lookup the target word vector
+  </div>
+</section>
