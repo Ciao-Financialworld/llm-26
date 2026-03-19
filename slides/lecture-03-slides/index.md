@@ -15,7 +15,7 @@
   <div class="ppt-title">Outline</div>
   <div class="ppt-line"></div>
   <ul class="outline-bullets big">
-    <li class="active">Text Classification and Word Meaning</li>
+    <li class="active">Text Classification</li>
     <li class="muted">Counting-based Methods</li>
     <li class="muted">Learning-based Methods</li>
     <li class="muted">Bridge to LLMs</li>
@@ -43,11 +43,11 @@
         <span style="color:#1f4ba5; font-weight:700;">text → representation → label</span>
       </div>
     </div>
-    <div style="flex:1;">
+    <div  class="fragment" style="flex:1;">
       <div style="padding:16px 20px; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; font-size: 28px; line-height:1.4; margin-bottom:14px;">
         <b>Example 1</b><br/>
         "Congratulations! You won $10,000 ..."<br/>
-        → <b>Spam</b>
+        → <b>Spam</b> or <b>Not Spam</b>
       </div>
       <div style="padding:16px 20px; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; font-size: 28px; line-height:1.4; margin-bottom:14px;">
         <b>Example 2</b><br/>
@@ -57,12 +57,12 @@
       <div style="padding:16px 20px; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; font-size: 28px; line-height:1.4;">
         <b>Example 3</b><br/>
         "Full of fantastic characters and great plot twists."<br/>
-        → <b>Positive</b>
+        → <b>Positive</b> or <b>Negative</b> 
       </div>
     </div>
   </div>
 
-  <div style="margin-top:22px; text-align:center; font-size: 32px; font-weight:700;">
+  <div  class="fragment" style="margin-top:22px; text-align:center; font-size: 32px; font-weight:700;">
     <b>Key question:</b> How should we represent text so that a machine can classify it well?
   </div>
 </section>
@@ -89,23 +89,20 @@
         </li>
       </ul>
     </div>
-    <div style="flex:1; font-size: 28px; line-height: 1.35;">
+    <div class="fragment" style="flex:1; font-size: 28px; line-height: 1.35;">
       <div style="margin-bottom: 12px;"><b>Popular classifiers</b></div>
       <ul style="margin: 0 0 16px 0; padding-left: 1.1em;">
         <li><span class="text-red">Naïve Bayes (NB)</span></li>
         <li><span class="text-red">Logistic Regression (LR)</span></li>
         <li>Support-vector machines</li>
         <li>k-Nearest Neighbors</li>
-        <li>NNs + LR/Softmax <span class="text-green">(modern way)</span></li>
+        <li>NNs/LLMs + LR/Softmax <span class="text-green">(modern way)</span></li>
       </ul>
       <img
         src="media/models-text-classification.png"
         alt="Naive Bayes, Logistic Regression, SVM, and Neural Networks"
-        style="width:100%; max-width:520px; border:none; box-shadow:none; background:none;"
+        style="width:80%; max-width:520px; border:none; box-shadow:none; background:none;"
       >
-      <div style="font-size:0.72em; color:#666; margin-top:6px;">
-        Example models for text classification
-      </div>
     </div>
   </div>
 </section>
@@ -118,23 +115,23 @@
   <div class="ppt-body" style="display:flex; gap:34px; align-items:flex-start; margin-top:18px;">
     <!-- Left column -->
     <div style="font-size:.7em; flex:1.05;">
-      <ul class="bigul">
+      <ul class="fragment" class="bigul">
         <li>
-          <b>Goal:</b> given a document \(d\), predict its most likely class \(c\)
+          <b>Goal:</b> given a document \(d\), predict its likely class \(c\)
         </li>
-        <li class="fragment">
+        <li>
           <b>MAP decision rule:</b>
           \[
           c_{\text{MAP}}=\arg\max_{c\in C} P(c\mid d)
           \]
         </li>
-        <li class="fragment">
+        <li>
           <b>By Bayes' rule: </b> posterior \(=\) likelihood \(\times\) prior / evidence
           \[
           P(c\mid d)=\frac{P(d\mid c)\,P(c)}{P(d)}
           \]
         </li>
-        <li class="fragment">
+        <li>
           Since \(P(d)\) does not depend on \(c\),
           \[
           c_{\text{MAP}}
@@ -144,7 +141,7 @@
       </ul>
     </div>
     <!-- Right column -->
-    <div style="flex:0.95;">
+    <div class="fragment" style="flex:0.95;">
       <div style="background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:16px 18px; margin-bottom:16px;">
         <div style="font-size:.8em; font-weight:800; margin-bottom:10px; color:#1f4ba5;">
           Document representation
@@ -157,7 +154,7 @@
           using <b>bag-of-words</b>.
         </div>
       </div>
-      <div class="fragment" style="background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:16px 18px;">
+      <div style="background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:16px 18px;">
         <div style="font-size:.8em; font-weight:800; margin-bottom:10px; color:#1f4ba5;">
           NB classifier
         </div>
@@ -205,9 +202,9 @@
       </div>
     </div>
     <!-- Right -->
-    <div style="flex:1.0; font-size:0.7em">
+    <div class="fragment" style="flex:1.0; font-size:0.7em">
       <ul class="bigul">
-        <li class="fragment">
+        <li>
           <b>Step 2: classify by MAP</b>
           \[
           c_{\text{MAP}}=\arg\max_{c\in C} P(c\mid d)
@@ -216,17 +213,18 @@
           c_{\text{MAP}}=\arg\max_{c\in C} P(d\mid c)\,P(c)
           \]
         </li>
-        <li class="fragment">
+        <li>
           <b>Naive Bayes assumption:</b> features are conditionally independent given class \(c\)
           \[
           P(d\mid c)\approx \prod_{i=1}^{|V|} P(v_i\mid c)^{x_i}
           \]
         </li>
-      </ul>
-      <b>Why “naive”?</b><br>
+          <li>
+          <b>Why “naive”?</b><br>
         In reality, words are correlated, but this approximation often works surprisingly well.
+        </li>
+      </ul>
     </div>
-
   </div>
 </section>
 
@@ -238,18 +236,23 @@
 
   <div class="ppt-body" style="display:flex; gap:34px; align-items:flex-start; margin-top:18px;">
     <!-- Left -->
-    <div style="flex:1.02; font-size:0.8em">
+    <div style="flex:1.02; font-size:0.7em">
       <ul class="bigul">
         <li>
           <b>Estimate the class prior</b>
           \[
           \hat P(c)=\frac{N_c}{n}
           \]
-          <div style="font-size:0.7em; color:#555; margin-top:4px;">
-            \(n\): total number of training documents, \(\;N_c\): number of documents in class \(c\)
-          </div>
+          <ul class="bigul">
+          <li>
+          \(n\): total number of training documents
+          </li>
+          <li>
+          \(N_c\): number of documents in class \(c\)
+          </li>
+          </ul>
         </li>
-        <li class="fragment">
+        <li>
           <b>Estimate word probabilities in each class</b>
           \[
           \hat P(v_i\mid c)=
@@ -257,16 +260,16 @@
           {\sum_{v\in V}\mathrm{count}(v,c)+\alpha |V|}
           \]
         </li>
-        <li class="fragment">
+        <li>
           <b>Smoothing is important</b><br>
           use \(\alpha=1\) (Laplace/add-one smoothing) to avoid zero probabilities
         </li>
       </ul>
     </div>
     <!-- Right -->
-    <div style="flex:1.0;">
+    <div class="fragment" style="flex:1.0;">
       <div style="padding:14px 16px; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; margin-bottom:14px;">
-        <div style="font-size:.8em; font-weight:800; margin-bottom:8px; color:#1f4ba5;">
+        <div style="font-size:.7em; font-weight:800; margin-bottom:8px; color:#1f4ba5;">
           Prediction rule
         </div>
         <div style="font-size:0.7em; line-height:1.45;">
@@ -282,18 +285,18 @@
           \]
         </div>
       </div>
-      <div class="fragment" style="padding:14px 16px; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px;">
-        <div style="font-size:.8em; font-weight:800; margin-bottom:8px; color:#1f4ba5;">
+      <div style="padding:14px 16px; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px;">
+        <div style="font-size:.7em; font-weight:800; margin-bottom:8px; color:#1f4ba5;">
           Why take logs?
         </div>
-        <ul class="subul" style="margin:0; font-size:0.7em; line-height:1.4;">
+        <ul class="bigul" style="margin:18px; font-size:0.7em; line-height:1.4;">
           <li>turn products into sums</li>
           <li>avoid numerical underflow</li>
           <li>make computation simpler and more stable</li>
         </ul>
       </div>
-      <div class="fragment" style="margin-top:14px; text-align:center; font-size:0.9em; font-weight:700; color:#1f4ba5;">
-        Train \(P(c)\) and \(P(v_i\mid c)\) from counts, then score each class.
+      <div style="margin-top:14px; text-align:center; font-size:0.7em; font-weight:700; color:#1f4ba5;">
+        Naive Bayes classifier: Train \(P(c)\) and \(P(v_i\mid c)\) from counts, then score each class.
       </div>
     </div>
 
@@ -316,18 +319,18 @@
           \mathbf{x} = [x_1, x_2, \dots, x_p]^\top
           \]
         </li>
-        <li class="fragment">
+        <li>
           <b>Idea:</b> each feature \(x_i\) has a weight \(w_i\)
           measuring how important it is for prediction
         </li>
       </ul>
-      <div class="fragment" style="margin:10px 0 0 22px; padding:14px 16px; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; font-size:0.7em; line-height:1.45;">
+      <div class="fragment"  data-fragment-index="1" style="margin:10px 0 0 22px; padding:14px 16px; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; font-size:0.7em; line-height:1.45;">
         <b>Sentiment example</b><br><br>
         <span style="color:#3f6cc8;">awesome</span>  \(\rightarrow\) positive weight<br>
         <span style="color:#3f6cc8;">abysmal</span> \(\rightarrow\) negative weight<br>
         <span style="color:#3f6cc8;">mediocre</span> \(\rightarrow\) slightly negative weight
       </div>
-      <div class="fragment" style="margin:14px 0 0 22px; padding:14px 16px; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; font-size:0.7em; line-height:1.4;">
+      <div class="fragment"  data-fragment-index="1" style="margin:14px 0 0 22px; padding:14px 16px; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; font-size:0.7em; line-height:1.4;">
         <b>Linear score $z = \mathbf{w}^\top \mathbf{x} + b$</b>
         where \(\mathbf{w}=[w_1,w_2,\dots,w_p]^\top\) and \(b\) is the bias.
       </div>
@@ -335,37 +338,33 @@
     <!-- Right column -->
     <div style="flex:1.0; font-size:0.7em">
       <ul class="bigul">
-        <li class="fragment">
-          We want a <b>probabilistic classifier</b>, not just a raw score
-        </li>
-        <li class="fragment">
-          Convert the score into a probability using the <b>sigmoid</b>:
+        <li class="fragment"   data-fragment-index="2" >
+          We want a <b>probabilistic classifier</b>, not just a raw score; So, convert the score into a probability using the <b>sigmoid</b>:
           \[
           P(y=1\mid \mathbf{x}) = \sigma(z)
           = \frac{1}{1+e^{-z}}
           \]
         </li>
-        <li class="fragment">
+        <li class="fragment"   data-fragment-index="2" >
           Therefore, $P(y=1\mid \mathbf{x}) = \sigma(\mathbf{w}^\top \mathbf{x}+b)$
         </li>
-        <li class="fragment">
+        <li class="fragment"   data-fragment-index="2" >
           Predict class \(1\) if the probability is high enough,
           otherwise predict class \(0\)
         </li>
       </ul>
-      <div class="fragment" style="margin-top:10px; padding:14px 16px; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; font-size:0.7em; line-height:1.4;">
+      <div class="fragment"   data-fragment-index="2" style="margin:20px; margin-top:20px; padding:14px 16px; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; font-size:0.7em; line-height:1.4;">
         <b>Interpretation:</b><br>
         <li>
-        - LR directly models \(P(y\mid \mathbf{x})\), unlike Naive Bayes,
+        LR directly models \(P(y\mid \mathbf{x})\), unlike Naive Bayes,
         which models \(P(\mathbf{x}\mid y)\) and then applies Bayes’ rule.
         </li>
         <li>
-        - feature vector \(\;\rightarrow\;\) linear score \(\;\rightarrow\;\) sigmoid \(\;\rightarrow\;\) probability
+        feature vector \(\;\rightarrow\;\) linear score \(\;\rightarrow\;\) sigmoid \(\;\rightarrow\;\) probability
         </li>
       </div>
     </div>
   </div>
-
 </section>
 
 ---
@@ -406,7 +405,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.05;">
+    <div  class="fragment" style="flex:1.05;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Multinomial Logistic Regression (Softmax)
       </div>
@@ -480,7 +479,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.05;">
+    <div  class="fragment"  style="flex:1.05;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Cross-entropy loss for binary LR
       </div>
@@ -566,7 +565,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.05;">
+    <div  class="fragment"  style="flex:1.05;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Gradient descent
       </div>
@@ -597,7 +596,7 @@
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Logistic Regression: One Gradient Descent Step</div>
+  <div class="ppt-title">Logistic Regression: One GD Step</div>
   <div class="ppt-line"></div>
 
   <div class="ppt-body" style="display:flex; gap:28px; align-items:flex-start; margin-top:16px;">
@@ -633,7 +632,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.05;">
+    <div class="fragment" style="flex:1.05;">
       <div style="font-size:0.7em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Compute gradient and update
       </div>
@@ -738,7 +737,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.0;">
+    <div class="fragment"  style="flex:1.0;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Generalization and overfitting
       </div>
@@ -814,7 +813,7 @@
       <div style="font-size:0.7em; line-height:1.42; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
         <div style="margin-bottom:8px;">
           Classic models usually rely on manually designed features
-          such as bag-of-words or \(n\)-gram counts. Neural models replace hand-crafted features with a learned representation: $\textbf{Embeddings!}$
+          such as bag-of-words or \(n\)-gram counts. Neural models (LLMs) replace hand-crafted features with a learned representation: $\textbf{Embeddings!}$
         </div>
       </div>
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin:12px 0 8px 0;">
@@ -843,7 +842,7 @@
   <div class="ppt-title">Outline</div>
   <div class="ppt-line"></div>
   <ul class="outline-bullets big">
-    <li class="muted">Text Classification and Word Meaning</li>
+    <li class="muted">Text Classification</li>
     <li class="active">Counting-based Methods</li>
     <li class="muted">Learning-based Methods</li>
     <li class="muted">Bridge to LLMs</li>
@@ -885,7 +884,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.05;">
+    <div class="fragment"  style="flex:1.05;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         What should a meaning representation capture?
       </div>
@@ -917,7 +916,7 @@
     </div>
   </div>
 
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     Word meaning should come from how a word is used in context
   </div>
 </section>
@@ -957,7 +956,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.0;">
+    <div class="fragment"  style="flex:1.0;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         What does this example show?
       </div>
@@ -966,10 +965,7 @@
           We do not need a dictionary entry first.
         </div>
         <div style="margin-bottom:8px;">
-          Meaning can be inferred from the <b>surrounding words</b>.
-        </div>
-        <div>
-          So a word can be represented by the contexts in which it appears.
+          Meaning can be inferred from the <b>surrounding words</b>. So a word can be represented by the contexts in which it appears.
         </div>
       </div>
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin:12px 0 8px 0;">
@@ -978,17 +974,14 @@
       <div style="font-size:0.7em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
         <div style="margin-bottom:8px;">
           This motivates representing each word by
-          <b>statistics of its context</b>.
-        </div>
-        <div>
-          Next, we will see how to build such representations with
+          <b>statistics of its context</b>. We will see how to build such representations with
           <b>counting-based methods</b>.
         </div>
       </div>
     </div>
   </div>
 
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     Context gives us a practical way to represent meaning
   </div>
 </section>
@@ -1031,7 +1024,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.05;">
+    <div class="fragment"   data-fragment-index="1"   style="flex:1.05;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         What should embeddings preserve?
       </div>
@@ -1051,7 +1044,7 @@
         </div>
       </div>
       <br/>
-      <div style="font-size:0.7em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
+      <div class="fragment"   data-fragment-index="1"  style="font-size:0.7em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
         Intuition: Instead of representing a word as a one-hot symbol,
         we represent it by a vector whose position reflects how the word is used.
       </div>
@@ -1090,7 +1083,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.0;">
+    <div class="fragment"   data-fragment-index="1" style="flex:1.0;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         2. Learning-based embeddings
       </div>
@@ -1112,19 +1105,15 @@
       </div>
     </div>
   </div>
-
   <div style="margin-top:14px; display:flex; gap:18px;">
     <div style="flex:1; font-size:0.6em; line-height:1.38; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:10px 12px;">
       <b>Counting-based view:</b><br>
       a word is represented by observed context statistics
     </div>
-    <div style="flex:1; font-size:0.6em; line-height:1.38; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:10px 12px;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1; font-size:0.6em; line-height:1.38; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:10px 12px;">
       <b>Learning-based view:</b><br>
       a word is represented by parameters learned from a prediction objective
     </div>
-  </div>
-  <div style="margin-top:12px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
-    two routes to embeddings: count contexts directly, or learn vectors by prediction
   </div>
 </section>
 
@@ -1401,7 +1390,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.02;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.02;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Measuring similarity
       </div>
@@ -1445,8 +1434,8 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
-    key idea: two words are similar if their context-word vectors are similar
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+    Key idea: two words are similar if their context-word vectors are similar
   </div>
 </section>
 
@@ -1482,11 +1471,11 @@
         =
         \log \frac{p_{ij}}{p_{i*}\,p_{*j}}.
         \]
-        A large PMI means \(w_i\) and \(c_j\) appear together more often than independence predicts.
+        A large PMI means \(w_i\) and \(c_j\) appear together more often.
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.02;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.02;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Positive PMI (PPMI)
       </div>
@@ -1531,7 +1520,7 @@
   <div class="ppt-title">Outline</div>
   <div class="ppt-line"></div>
   <ul class="outline-bullets big">
-    <li class="muted">Text Classification and Word Meaning</li>
+    <li class="muted">Text Classification</li>
     <li class="muted">Counting-based Methods</li>
     <li class="active">Learning-based Methods</li>
     <li class="muted">Bridge to LLMs</li>
@@ -1578,7 +1567,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.05;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.05;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Core idea
       </div>
@@ -1611,7 +1600,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     word2vec learns word meaning by predicting context, not by directly counting context
   </div>
 </section>
@@ -1652,7 +1641,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:0.98;">
+    <div class="fragment"  data-fragment-index="1" style="flex:0.98;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Core idea
       </div>
@@ -1678,7 +1667,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     word2vec learns word vectors by solving a self-supervised prediction task
   </div>
 </section>
@@ -1726,7 +1715,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.02;">
+    <div class="fragment"  data-fragment-index="1"  style="flex:1.02;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Negative pairs
       </div>
@@ -1760,7 +1749,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     Observed neighbors give positive pairs; sampled noise words give negative pairs
   </div>
 </section>
@@ -1801,7 +1790,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.02;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.02;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Loss for one positive pair
       </div>
@@ -1831,7 +1820,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     Maximize similarity to true neighbors, minimize similarity to noise samples
   </div>
 </section>
@@ -1880,7 +1869,7 @@
       </div>
     </div>
     <!-- Right column -->
-    <div style="flex:1.18;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.18;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Matrix view
       </div>
@@ -1938,7 +1927,7 @@
           </table>
         </div>
       </div>
-      <div style="margin-top:12px; font-size:0.6em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
+      <div class="fragment"  data-fragment-index="1" style="margin-top:12px; font-size:0.6em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
         In neural-network notation, these are often written as
         \[
         W = W_{\text{in}}, \qquad C = W_{\text{out}}.
@@ -1986,7 +1975,7 @@
         </div>
       </div>
     </div>
-    <div style="flex:1.02;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.02;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         One training position
       </div>
@@ -2014,7 +2003,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     word2vec turns the corpus into many target-context training pairs
   </div>
 </section>
@@ -2046,7 +2035,7 @@
         Let $W_{\text{in}}\in\mathbb{R}^{|V|\times d}.$ Each row of \(W_{\text{in}}\) is the embedding of one target word.
       </div>
     </div>
-    <div style="flex:1.05;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.05;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Projection = embedding lookup
       </div>
@@ -2063,7 +2052,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     One-hot input + embedding matrix = lookup the target word vector
   </div>
 </section>
@@ -2093,7 +2082,7 @@
         Then apply softmax: $P(c\mid w) = \frac{\exp(s_c)} {\sum_{c'\in V}\exp(s_{c'})}.$
       </div>
     </div>
-    <div style="flex:1.02;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.02;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Running example
       </div>
@@ -2119,7 +2108,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     Full softmax is conceptually simple, but computationally expensive
   </div>
 </section>
@@ -2156,7 +2145,7 @@
         \]
       </div>
     </div>
-    <div style="flex:1.02;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.02;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Binary objective
       </div>
@@ -2186,7 +2175,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     Negative sampling replaces expensive full softmax by a small binary classification problem
   </div>
 </section>
@@ -2282,7 +2271,7 @@
         \]
       </div>
     </div>
-    <div style="flex:1.02;">
+    <div class="fragment"  data-fragment-index="1" style="flex:1.02;">
       <div style="font-size:0.8em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
         Corpus-level objective and SGD update
       </div>
@@ -2311,7 +2300,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
+  <div class="fragment"  data-fragment-index="1" style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     Train by minimizing a local binary-classification loss with SGD
   </div>
 </section>
@@ -2391,6 +2380,158 @@
   </div>
   <div style="margin-top:14px; text-align:center; font-size:0.78em; font-weight:700; color:#1f4ba5;">
     One update step pulls target and true context together, and pushes target away from noise samples
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">wor2vec: forward propagation of loss</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/word2vec-1.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+
+<section class="ppt">
+  <div class="ppt-title">wor2vec: forward propagation of loss</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/word2vec-2.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+
+<section class="ppt">
+  <div class="ppt-title">wor2vec: backward propagation of gradients</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/word2vec-3.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+
+<section class="ppt">
+  <div class="ppt-title">wor2vec: backward propagation of gradients</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/word2vec-4.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+
+<section class="ppt">
+  <div class="ppt-title">wor2vec: backward propagation of gradients</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/word2vec-5.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+
+<section class="ppt">
+  <div class="ppt-title">wor2vec: backward propagation of gradients</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/word2vec-6.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">wor2vec: backward propagation of gradients</div>
+  <div class="ppt-line"></div>
+  <div style="
+    margin-top:18px;
+    width:100%;
+    height:600px;
+    border:2px solid rgba(0,0,0,0.12);
+    border-radius:18px;
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 10px 22px rgba(0,0,0,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;">
+  <img src="media/word2vec-7.png" style="max-width:100%; max-height:100%; object-fit:contain;" />
   </div>
 </section>
 
@@ -2773,45 +2914,6 @@ for a = 0, ..., |V|-1:
 ---
 
 <section class="ppt">
-  <div class="ppt-title">Applications: Embeddings Reveal Semantic Change</div>
-  <div class="ppt-line"></div>
-
-  <div class="ppt-body" style="margin-top:16px;">
-    <div style="font-size:0.6em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
-      Diachronic word embeddings
-    </div>
-    <div style="font-size:0.6em; line-height:1.45; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
-      Train embeddings on texts from different historical periods, then compare the neighborhoods of the same word across decades.
-      If the nearby words change, that suggests the word’s meaning or usage has shifted over time.
-    </div>
-    <div style="background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 12px; margin-bottom:12px;">
-      <img
-        src="media/embedding-semantic-change.png"
-        alt="Semantic change revealed by diachronic word embeddings"
-        style="width:100%; max-width:1100px; display:block; margin:0 auto; border:none; box-shadow:none; background:none;"
-      >
-    </div>
-    <div style="font-size:0.6em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
-      <b>Examples in the figure:</b>
-      <div style="margin-top:6px;">
-        • <b>gay</b> shifts from “cheerful / bright” toward sexual-identity-related usage
-      </div>
-      <div style="margin-top:4px;">
-        • <b>broadcast</b> shifts from “spread / scatter” toward radio and television
-      </div>
-      <div style="margin-top:4px;">
-        • <b>awful</b> shifts from “solemn / majestic” toward strongly negative meaning
-      </div>
-    </div>
-  </div>
-  <div style="margin-top:14px; text-align:center; font-size:0.72em; color:#555;">
-    Hamilton, Leskovec, and Jurafsky (2016), <i>Diachronic Word Embeddings Reveal Statistical Laws of Semantic Change</i>, ACL.
-  </div>
-</section>
-
----
-
-<section class="ppt">
   <div class="ppt-title">Applications: Semantic Change</div>
   <div class="ppt-line"></div>
   <div class="ppt-body" style="display:flex; gap:24px; align-items:flex-start; margin-top:16px;">
@@ -3138,6 +3240,110 @@ for a = 0, ..., |V|-1:
 </b>
 <div style="margin-top:4px;">Part of Google News corpus, about <b>100B words</b>. Provides <b>300-dimensional</b> vectors for about <b>3M words and phrases</b>.</div>
 </div><div style="font-size:0.6em;line-height:1.42;background:#f7f8fc;border:1px solid #d9deea;border-radius:12px;padding:12px 14px;margin-bottom:10px;"><b>GloVe releases</b><div style="margin-top:4px;">• <b>Wikipedia + Gigaword</b>: 6B tokens, 400K vocab</div><div style="margin-top:4px;">• <b>Common Crawl</b>: 42B / 840B tokens, up to 2.2M vocab</div><div style="margin-top:4px;">• <b>Twitter</b>: 2B tweets, 27B tokens</div></div><div style="font-size:0.6em;line-height:1.42;background:#fff8f0;border:1px solid #eed9b6;border-radius:12px;padding:12px 14px;"><b>Practical takeaway</b><div style="margin-top:4px;">All three produce <b>static embeddings</b>: each word type gets one fixed vector.</div><div style="margin-top:4px;">They differ mainly in how the vector is learned: <b>prediction</b> (word2vec), <b>global counts</b> (GloVe), or <b>subwords</b> (fastText).</div></div></div></div><div style="margin-top:12px;text-align:center;font-size:0.76em;font-weight:700;color:#1f4ba5;">word2vec, GloVe, and fastText are the three most widely used classic static embeddings</div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">Outline</div>
+  <div class="ppt-line"></div>
+  <ul class="outline-bullets big">
+    <li class="muted">Text Classification</li>
+    <li class="muted">Counting-based Methods</li>
+    <li class="muted">Learning-based Methods</li>
+    <li class="active">Bridge to LLMs</li>
+  </ul>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">Bridge to LLMs: Qwen Embeddings</div>
+  <div class="ppt-line"></div>
+  <div class="ppt-body" style="display:flex; gap:24px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.95;">
+      <div style="font-size:0.7em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        What this demo shows
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:10px;">
+        Qwen Embeddings maps each input text to a dense vector in a shared semantic space.
+        Similar texts should have nearby vectors, so we can use cosine similarity for
+        semantic search, clustering, and retrieval.
+      </div>
+      <div style="font-size:0.7em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Demo flow
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:10px;">
+        <div style="margin-bottom:6px;">• encode several sentences or queries</div>
+        <div style="margin-bottom:6px;">• compute cosine similarities between embeddings</div>
+        <div style="margin-bottom:6px;">• show that semantically related texts are closer</div>
+        <div>• optionally rank documents by similarity to a query</div>
+      </div>
+    </div>
+    <div style="flex:1.05;">
+      <div style="font-size:0.7em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Connection to earlier content
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
+        Classic word embeddings assign one fixed vector to each word type.
+        Modern embedding models instead produce vectors for longer texts
+        such as sentences, queries, and documents, making them much more useful
+        for retrieval and downstream NLP applications.
+      </div>
+      <div style="font-size:0.7em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Key takeaway
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        Embeddings are now a practical interface between language models and applications:
+        encode text once, then compare vectors efficiently.
+      </div>
+    </div>
+  </div>
+</section>
+
+---
+
+<section class="ppt">
+  <div class="ppt-title">Bridge to LLMs: Google EmbeddingGemma</div>
+  <div class="ppt-line"></div>
+
+  <div class="ppt-body" style="display:flex; gap:24px; align-items:flex-start; margin-top:16px;">
+    <div style="flex:0.95;">
+      <div style="font-size:0.7em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        What this demo shows
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:10px;">
+        EmbeddingGemma is another modern text embedding model.
+        It converts inputs into semantic vectors that can support tasks such as
+        nearest-neighbor retrieval, semantic matching, and retrieval-augmented generation.
+      </div>
+      <div style="font-size:0.7em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Demo flow
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#fbfbfd; border:1px solid #d9deea; border-radius:12px; padding:12px 14px; margin-bottom:10px;">
+        <div style="margin-bottom:6px;">• encode a query and a small document set</div>
+        <div style="margin-bottom:6px;">• retrieve the nearest texts in embedding space</div>
+        <div style="margin-bottom:6px;">• compare ranking quality with lexical overlap</div>
+        <div>• emphasize semantic matching rather than exact word matching</div>
+      </div>
+    </div>
+    <div style="flex:1.05;">
+      <div style="font-size:0.7em; font-weight:800; color:#1f4ba5; margin-bottom:8px;">
+        Why this matters for LLMs
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#fff8f0; border:1px solid #eed9b6; border-radius:12px; padding:12px 14px;">
+        Modern LLM systems often use two components together:
+        <div style="margin-top:6px;">• an <b>embedding model</b> for retrieval</div>
+        <div style="margin-top:4px;">• a <b>generative LLM</b> for answering or reasoning</div>
+        <div style="margin-top:6px;">This is one of the most important real-world bridges from classic embeddings to LLM applications.</div>
+      </div>
+      <div style="font-size:0.6em; line-height:1.42; background:#f7f8fc; border:1px solid #d9deea; border-radius:12px; padding:12px 14px;">
+        <b>Key takeaway:</b><br>
+        In modern NLP pipelines, embedding models are often the retrieval engine,
+        while LLMs are the reasoning and generation engine.
+      </div>
+    </div>
+  </div>
 </section>
 
 ---
