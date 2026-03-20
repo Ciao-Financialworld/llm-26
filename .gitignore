@@ -217,3 +217,8 @@ gpt-2
 **/.datasets
 datasets.zip
 **/datasets.zip
+
+# never track kenlm sources/build outputs in this repo
+/kenlm/
+**/kenlm/
+lecture-02-ngram-lm/kenlm/

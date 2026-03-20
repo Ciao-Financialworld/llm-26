@@ -1,4 +1,4 @@
-# 第02讲：统计语言模型
+﻿# 第02讲：统计语言模型
 
 **DATA130030.01，自然语言处理**（阅读时长约60分钟）  
 **日期：** 2025年9月17日  
@@ -89,9 +89,9 @@ $N$-gram 模型的正式定义如下：
 
 $$\mathcal{D}_{\text{tr}} = \{s_1, s_2, \ldots, s_T\} \equiv s_{1:T}, \quad s_i = w_{1:t_i}^{(i)} \in \mathcal{V}^{\dagger}.$$
 
-设模型由参数向量 $\bm{\theta} = [\theta_1, \theta_2, \ldots, \theta_d]^\top$ 刻画。**最大似然估计（MLE）** 的目标是找到使观测数据联合概率最大的参数：
+设模型由参数向量 $\theta = [\theta_1, \theta_2, \ldots, \theta_d]^\top$ 刻画。**最大似然估计（MLE）** 的目标是找到使观测数据联合概率最大的参数：
 
-$$\hat{\bm{\theta}} \in \argmax_{\bm{\theta} \in \bm{\Theta}} \left\{ \mathcal{L}_T(\bm{\theta}; \mathcal{D}_{\text{tr}}) := P(s_{1:T}; \bm{\theta}) \right\}.$$
+$$\hat{\theta} \in \argmax_{\theta \in \Theta} \left\{ \mathcal{L}_T(\theta; \mathcal{D}_{\text{tr}}) := P(s_{1:T}; \theta) \right\}.$$
 
 ### 一元模型的 MLE
 
@@ -99,7 +99,7 @@ $$\hat{\bm{\theta}} \in \argmax_{\bm{\theta} \in \bm{\Theta}} \left\{ \mathcal{L
 
 $$P(s_{1:T}) = \prod_{i=1}^{|\mathcal{V}|+1} \theta_i^{C(v_i)},$$
 
-其中 $C(v_i)$ 为 $v_i$ 在训练语料中出现的次数，参数向量 $\bm{\theta} = [\theta_1, \ldots, \theta_{|\mathcal{V}|}, \theta_{\text{EOS}}]^\top$，约束为 $\sum_{i=1}^{|\mathcal{V}|+1} \theta_i = 1$。
+其中 $C(v_i)$ 为 $v_i$ 在训练语料中出现的次数，参数向量 $\theta = [\theta_1, \ldots, \theta_{|\mathcal{V}|}, \theta_{\text{EOS}}]^\top$，约束为 $\sum_{i=1}^{|\mathcal{V}|+1} \theta_i = 1$。
 
 对数似然为：
 
@@ -107,7 +107,7 @@ $$\argmax_{\sum_j \theta_j = 1} \sum_{i=1}^{|\mathcal{V}|+1} C(v_i) \log \theta_
 
 引入拉格朗日乘子 $\lambda$，构造拉格朗日函数：
 
-$$G(\bm{\theta}, \lambda) = \sum_{i=1}^{|\mathcal{V}|+1} C(v_i) \log \theta_i - \lambda\left(\sum_{i=1}^{|\mathcal{V}|+1} \theta_i - 1\right).$$
+$$G(\theta, \lambda) = \sum_{i=1}^{|\mathcal{V}|+1} C(v_i) \log \theta_i - \lambda\left(\sum_{i=1}^{|\mathcal{V}|+1} \theta_i - 1\right).$$
 
 令偏导为零（**勘误：** 原文求和上限为 $|\mathcal{V}|$，应为 $|\mathcal{V}|+1$）：
 
@@ -118,26 +118,14 @@ $$\frac{\partial G}{\partial \theta_i} = \frac{C(v_i)}{\theta_i} - \lambda = 0, 
 $$\theta_i^* = \frac{C(v_i)}{\sum_{i=1}^T |s_i|}.$$
 
 即一元模型的 MLE 参数就是**频率估计**。
-这就是训练集中所有 token 的总数。
 
-于是最终：
-
-\[
-\theta_i^*=\frac{C(v_i)}{\sum_{j=1}^{|V|+1} C(v_j)}
-\]
-
-也就是：
-
-> **词的概率 = 该词出现次数 / 训练集中总词数**
-
-这就是 unigram 的 MLE 结果。
 ### 二元模型的 MLE
 
 对于二元模型，令 $\theta_{i,j+1} := q(v_{j+1} \mid v_i)$，约束为对所有 $i$：$\sum_{j=0}^{|\mathcal{V}|} \theta_{i,j+1} = 1$。
 
 对数似然为：
 
-$$\log P(s_{1:T}; \bm{\Theta}) = \sum_{i=0}^{|\mathcal{V}|} \sum_{j=0}^{|\mathcal{V}|} C(v_i, v_{j+1}) \log q(v_{j+1} \mid v_i).$$
+$$\log P(s_{1:T}; \Theta) = \sum_{i=0}^{|\mathcal{V}|} \sum_{j=0}^{|\mathcal{V}|} C(v_i, v_{j+1}) \log q(v_{j+1} \mid v_i).$$
 
 类似地引入拉格朗日乘子 $\lambda_i$，令梯度为零，解得：
 
@@ -147,7 +135,6 @@ $$\theta_{i,j+1}^* = q(v_{j+1} \mid v_i) = \frac{C(v_i, v_{j+1})}{\sum_{j=0}^{|\
 
 $$q(x_N \mid x_{1:N-1}) = \frac{C(x_{1:N})}{C(x_{1:N-1})}.$$
 
-> **条件概率 = “完整片段出现多少次” ÷ “条件部分出现多少次”**
 ---
 
 ## $N$-gram 语言模型的平滑
@@ -174,11 +161,6 @@ $$\lambda_1 = \frac{C(x_{1:2})}{C(x_{1:2}) + \gamma}, \quad \lambda_2 = (1 - \la
 
 其中 $\gamma > 0$ 为唯一超参数。可验证各 $\lambda_i$ 为正且和为1。
 
-线性插值 = unigram + bigram + trigram 的加权混合
-
-高阶模型更准，但更稀疏；低阶模型更粗，但更稳
-
-上下文越可靠，越应给高阶模型更大权重
 ### Katz 回退平滑（Katz Back-off）
 
 对二元模型，对任意 $x_1$ 定义：
@@ -316,3 +298,4 @@ n \cdot \left(-\frac{1}{n}\right) \log\!\left(\frac{1}{n}\right) &\geq -\sum_{i=
 即 $\log(n) \geq H(p)$。上界在 $p(x_i) = 1/n$（均匀分布）时取到，证毕。
 
 更多内容见 Conrad (2004)。
+
