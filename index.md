@@ -43,23 +43,9 @@ This course covers the foundations and modern frontiers of Natural Language Proc
 All standard homework assignments are completed by **Week 12**. The final month (Weeks 13–16) is dedicated exclusively to the Course Project. Please submit your homework at [https://elearning.fudan.edu.cn/](https://elearning.fudan.edu.cn/)
 
 ### Assignment 1. Foundations of Text
-- **Due:** Week 4
-- **Scope:** Implement BPE tokenization from scratch; train a Word2Vec model.
-- **Deliverable:** Python Notebook + Analysis Report.
+- **Due:** Week 5 (04/02/2026 23:59 pm)
+- **Deliverable:** Please check out it at [elearning](https://elearning.fudan.edu.cn/).
 
-### Assignment 2. The Transformer Block
-- **Due:** Week 7
-- **Scope:** Build a mini-Transformer; visualize attention heads.
-- **Track B Requirement:** Implement `MultiHeadAttention` in raw PyTorch without `nn.Transformer`.
-
-### Assignment 3. LLM Lifecycle: Fine-tuning (Tentative)
-- **Due:** Week 10
-- **Scope:** Parameter-Efficient Fine-Tuning (LoRA) of a small Llama/Qwen model on a custom instruction set.
-- **Eval:** Compare pre-trained vs. fine-tuned performance on specific tasks.
-
-### Assignment 4. RAG and Agent Systems (Tentative)
-- **Due:** Week 12
-- **Scope:** Build a vertical QA system (e.g., "Textbook Chatbot"). Index a specific PDF/Corpus, implement retrieval + generation loop, and evaluate hallucination rates using automated metrics.
 
 ### Course Project
 - **Timeline:** Weeks 13–16 (Dedicated time)
@@ -150,9 +136,6 @@ Use of AI coding assistants **is permitted**. However, you should explicitly att
 
 FFNNs for language, Softmax, Batching, Optimization
 
-**Assignment 1 Due**
-**Release Assignment 2**
-
 ### Week 5 Sequence Modeling
 
 RNNs/LSTMs (Brief overview), Encoder-Decoder paradigms
@@ -165,9 +148,6 @@ Dot-product attention, Query/Key/Value intuition
 ### Week 7 The Transformer Architecture
 
 Self-Attention, Multi-head, Positional Encodings, LayerNorm
-
-**Assignment 2 Due** 
-**Release Assignment 3**
 
 ### Week 8 LLM Pretraining
 
@@ -182,9 +162,6 @@ SFT, LoRA/QLoRA, Adapters, Instruction Tuning
 ### Week 10 Evaluation
 
 Benchmarks (MMLU/GSM8K), Contamination, LLM-as-a-judge
-
-**Assignment 3 Due** 
-**Release Assignment 4**
 
 ### Week 11 Prompt Engineering
 
